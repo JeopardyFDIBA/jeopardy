@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {

@@ -19,7 +19,6 @@
   "include": [
     "vite.config.ts",
     ".eslintrc.cjs",
-    "commitlint.config.cjs",
     "src"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
