@@ -7,7 +7,7 @@ message="ERROR !
 Your commit was rejected - incorrect branch name.
 Branch names in this project must adhere to this contract: 
 {feat|fix|hotfix|test}({project-name}-{FE|BE})/{ticket-description}. 
-Example: feat(jeopardy-FE)- this is new feat
+Example: feat(jeopardy-FE)/this is new feat
 You should rename your branch and try again."
 
 if [[ ! $local_branch_name =~ $valid_branch_regex ]]; then
