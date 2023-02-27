@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
 
-valid_branch_regex="(feat|test|fix)(\(jeopardy\-(FE|BE)\))(\-)(\s*[a-zA-Z0-9]+).*$"
+valid_branch_regex="(feat|test|fix)(\(jeopardy\-(FE|BE)\))(\/)(\s*[a-zA-Z0-9]+).*$"
 
 message="ERROR !
 Your commit was rejected - incorrect branch name.
