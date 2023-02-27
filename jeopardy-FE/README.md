@@ -11,7 +11,7 @@ The main reason for developing the UI on React is the simplicity of the framewor
 
 ## Run Locally
 
-Before you proceed to cloning the code local, make sure you have already installed:
+Before you proceed to cloning the code on your local machine, make sure you have already installed:
 
 * NodeJS LTS (The project was made using 18.4.2)
 * Git 
