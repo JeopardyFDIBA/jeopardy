@@ -1,18 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import './Flipper.scss';
 
 function Flipper(props: any) {
-//   const { data } = props;
-//   const question = Object?.keys(data[0])[0];
-//   const answer = data[question];
+  const { question, answer } = props;
 
   return (
     <div className="flip-container">
       <div className="flipper">
         <div className="front">
-          <p>Hello</p>
+          <p>{question}</p>
         </div>
         <div className="back">
-          <p>There</p>
+          <p>{answer}</p>
         </div>
       </div>
     </div>

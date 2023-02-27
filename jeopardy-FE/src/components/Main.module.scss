@@ -1,0 +1,16 @@
+.wrapper{
+    display: flex;
+    justify-content: flex-start;
+    
+}
+.questionsField{
+    width: 100%;
+}
+.questionsField:focus-visible {
+    outline: 0px;
+}
+.questions{
+    display: flex;
+    justify-content: center;
+    margin-left: -200px;
+}
