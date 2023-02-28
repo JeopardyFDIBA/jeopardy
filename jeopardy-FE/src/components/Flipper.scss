@@ -1,3 +1,4 @@
+$background-color: black;
 * {
     box-sizing: border-box;
     margin:0px;
@@ -19,7 +20,7 @@
 .flip-container, .front, .back {
     width: 200px;
     height: 120px;
-    background-color: black;
+    background-color: $background-color;
 }
 
 /* flip speed goes here */
