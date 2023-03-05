@@ -1,4 +1,4 @@
-package com.jeopardy.repo;
+package repo;
 
 import org.springframework.data.repository.CrudRepository;
 

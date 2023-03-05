@@ -1,6 +1,6 @@
-package com.jeopardy.controller;
+package controller;
 
-import com.jeopardy.service.JeopardyService;
+import service.JeopardyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,10 @@ public class JeopardyController {
         this.jeopardyService = jeopardyService;
     }
 
-//    @PostMapping("baseURL/")
+    @PostMapping("baseURL/saveUsers")
+    public ResponseEntity<Object> savePlayers (@RequestBody String[] usernames) {
+        return null;
+    }
 
     @GetMapping("baseURL/opening")
     public ResponseEntity<Object> getOpeningQuestion() {
