@@ -32,4 +32,12 @@ public class Player {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void addScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
 }

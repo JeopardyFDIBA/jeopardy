@@ -18,7 +18,7 @@ public class JeopardyController {
 
     @PostMapping("baseURL/saveUsers")
     public ResponseEntity<Object> savePlayers (@RequestBody String[] usernames) {
-        return null;
+        return ResponseEntity.ok(jeopardyService.savePlayers(usernames));
     }
 
     @GetMapping("baseURL/opening")
@@ -42,9 +42,14 @@ public class JeopardyController {
     }
 
     @PostMapping("updatescore")
-    public ResponseEntity<Object> updateScores() {
-        jeopardyService.updateScores(0,0);
+    public ResponseEntity<Object> updateScores(@RequestBody UpdateScoreRequest updateScoreRequest) {
+        jeopardyService.updateScores(updateScoreRequest.getId(), updateScoreRequest.getScore());
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("checkAnswer")
+    public ResponseEntity<Object> checkAnswer(@RequestBody CheckAnswerRequest checkAnswerRequest) {
+        return ResponseEntity.ok(jeopardyService.checkAnswer(checkAnswerRequest.getAnswer(), checkAnswerRequest.getId()));
     }
 
 }

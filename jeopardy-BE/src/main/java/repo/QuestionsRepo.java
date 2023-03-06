@@ -2,8 +2,10 @@ package repo;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface QuestionsRepo extends CrudRepository<Question, Integer> {
     Question findById(int id);
 
-    Question findByCategory(String category);
+    List<Question> findAllByCategoryAndScore(String category, int score);
 }

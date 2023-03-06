@@ -17,31 +17,35 @@ import java.util.Random;
 @Service
 public class JeopardyService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private QuestionsRepo questionsRepo;
 
     @Autowired
     private PlayerRepo playerRepo;
 
-    private static final String uselessWords = "before beneath below above on in at the a an after with under toward through within" +
+    private static final int NUMBER_OF_CATEGORIES = 5;
+
+    private static final int[] TYPES_OF_QUESTIONS_BY_POINTS = {100,200,300,400,500};
+
+    private final Random random = new Random();
+
+    private List<Integer> activePlayerIds = new ArrayList<>();
+
+    private static final String USELESS_WORDS = "before beneath below above on in at the a an after with under toward through within" +
             "inside near out off from until to by about for since between without along across beyond except but around down up" +
             " into her his my their our your";
     private List<String> uselessWordsList;
 
     @Autowired
     public JeopardyService() {
-        uselessWordsList = new ArrayList<>(List.of(uselessWords.split(" ")));
+        uselessWordsList = new ArrayList<>(List.of(USELESS_WORDS.split(" ")));
     }
 
     public List<Integer> savePlayers(String[] usernames) {
-        List<Integer> ids = new ArrayList<>();
         for (String username : usernames) {
-            ids.add(playerRepo.save(new Player(username, 0)).getId());
+            activePlayerIds.add(playerRepo.save(new Player(username, 0)).getId());
         }
-        return ids;
+        return activePlayerIds;
     }
 
     public Question getOpeningQuestion() {
@@ -50,25 +54,38 @@ public class JeopardyService {
     }
 
     public List<String> getCategories() {
-        return null;
+        List<String> categories = new ArrayList<>();
+        for(int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
+            categories.add(questionsRepo.findById(getRandomIdInDatabase()).getCategory());
+        }
+        return categories;
     }
 
     private int getRandomIdInDatabase() {
         int questionAmount = (int) questionsRepo.count();
-        Random random = new Random();
         return random.nextInt(questionAmount);
     }
 
     public List<Question> getQuestions(String category) {
-        return null;
+        List<Question> allQuestionsInCategory = new ArrayList<>();
+        List<Question> currentQuestions;
+        for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
+            currentQuestions = questionsRepo.findAllByCategoryAndScore(category, score);
+            allQuestionsInCategory.add(currentQuestions.get(random.nextInt(currentQuestions.size() - 1)));
+        }
+        return allQuestionsInCategory;
     }
 
     public List<Player> getHighScores() {
-        return null;
+        List<Player> players = new ArrayList<>();
+        for (int id : activePlayerIds) {
+            players.add(playerRepo.findById(id));
+        }
+        return players;
     }
 
     public void updateScores(int id, int score) {
-
+        playerRepo.findById(id).addScore(score);
     }
 
     public CheckAnswerResponse checkAnswer(String playerAnswer, int id) {
