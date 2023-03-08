@@ -1,4 +1,4 @@
-package repo;
+package jeopardyApp.repo;
 
 import jakarta.persistence.*;
 
@@ -13,7 +13,7 @@ public class Player {
 
     @Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Player(String name, int score) {

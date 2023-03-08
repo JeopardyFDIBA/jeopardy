@@ -1,13 +1,14 @@
-package service;
+package jeopardyApp.service;
 
-import controller.CheckAnswerResponse;
-import repo.Player;
-import repo.PlayerRepo;
-import repo.Question;
-import repo.QuestionsRepo;
-import jakarta.persistence.*;
+import jeopardyApp.controller.CheckAnswerResponse;
+import jeopardyApp.controller.PlayerScoresResponse;
+import jeopardyApp.controller.QuestionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jeopardyApp.repo.Player;
+import jeopardyApp.repo.PlayerRepo;
+import jeopardyApp.repo.Question;
+import jeopardyApp.repo.QuestionsRepo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +49,10 @@ public class JeopardyService {
         return activePlayerIds;
     }
 
-    public Question getOpeningQuestion() {
-        int number = getRandomIdInDatabase();
-        return questionsRepo.findById(number);
+    public QuestionResponse getOpeningQuestion() {
+        int randomQuestionId = getRandomIdInDatabase();
+        Question question = questionsRepo.findById(randomQuestionId);
+        return new QuestionResponse(randomQuestionId, question.getActualQuestion());
     }
 
     public List<String> getCategories() {
@@ -66,20 +68,22 @@ public class JeopardyService {
         return random.nextInt(questionAmount);
     }
 
-    public List<Question> getQuestions(String category) {
-        List<Question> allQuestionsInCategory = new ArrayList<>();
+    public List<QuestionResponse> getQuestions(String category) {
+        List<QuestionResponse> allQuestionsInCategory = new ArrayList<>();
         List<Question> currentQuestions;
         for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
             currentQuestions = questionsRepo.findAllByCategoryAndScore(category, score);
-            allQuestionsInCategory.add(currentQuestions.get(random.nextInt(currentQuestions.size() - 1)));
+            Question question = currentQuestions.get(random.nextInt(currentQuestions.size() - 1));
+            allQuestionsInCategory.add(new QuestionResponse(question.getId(), question.getActualQuestion(), score));
         }
         return allQuestionsInCategory;
     }
 
-    public List<Player> getHighScores() {
-        List<Player> players = new ArrayList<>();
+    public List<PlayerScoresResponse> getHighScores() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
         for (int id : activePlayerIds) {
-            players.add(playerRepo.findById(id));
+            int playerScore = playerRepo.findById(id).getScore();
+            players.add(new PlayerScoresResponse(id, playerScore));
         }
         return players;
     }

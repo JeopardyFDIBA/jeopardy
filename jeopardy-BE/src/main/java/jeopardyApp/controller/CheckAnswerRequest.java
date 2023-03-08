@@ -1,4 +1,4 @@
-package controller;
+package jeopardyApp.controller;
 
 public class CheckAnswerRequest {
 

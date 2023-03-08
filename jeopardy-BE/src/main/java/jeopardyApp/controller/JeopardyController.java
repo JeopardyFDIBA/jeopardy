@@ -1,6 +1,6 @@
-package controller;
+package jeopardyApp.controller;
 
-import service.JeopardyService;
+import jeopardyApp.service.JeopardyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

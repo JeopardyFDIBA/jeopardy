@@ -1,17 +1,12 @@
-package repo;
+package jeopardyApp.repo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
 @Entity
 public class Question {
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String category;
     private String answer;
