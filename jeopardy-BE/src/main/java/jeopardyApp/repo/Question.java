@@ -11,7 +11,18 @@ public class Question {
     private String category;
     private String answer;
 
-    private String actualQuestion;
+    private String actualquestion;
+
+    public Question(String category, String answer, String actualquestion, int score) {
+        this.category = category;
+        this.answer = answer;
+        this.actualquestion = actualquestion;
+        this.score = score;
+    }
+
+    public Question() {
+
+    }
 
     public int getScore() {
         return score;
@@ -47,12 +58,12 @@ public class Question {
         this.id = id;
     }
 
-    public String getActualQuestion() {
-        return actualQuestion;
+    public String getActualquestion() {
+        return actualquestion;
     }
 
-    public void setActualQuestion(String actualQuestion) {
-        this.actualQuestion = actualQuestion;
+    public void setActualquestion(String actualQuestion) {
+        this.actualquestion = actualQuestion;
     }
 
 }

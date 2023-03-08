@@ -46,13 +46,14 @@ public class JeopardyService {
         for (String username : usernames) {
             activePlayerIds.add(playerRepo.save(new Player(username, 0)).getId());
         }
+
         return activePlayerIds;
     }
 
     public QuestionResponse getOpeningQuestion() {
         int randomQuestionId = getRandomIdInDatabase();
         Question question = questionsRepo.findById(randomQuestionId);
-        return new QuestionResponse(randomQuestionId, question.getActualQuestion());
+        return new QuestionResponse(randomQuestionId, question.getActualquestion());
     }
 
     public List<String> getCategories() {
@@ -74,7 +75,7 @@ public class JeopardyService {
         for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
             currentQuestions = questionsRepo.findAllByCategoryAndScore(category, score);
             Question question = currentQuestions.get(random.nextInt(currentQuestions.size() - 1));
-            allQuestionsInCategory.add(new QuestionResponse(question.getId(), question.getActualQuestion(), score));
+            allQuestionsInCategory.add(new QuestionResponse(question.getId(), question.getActualquestion(), score));
         }
         return allQuestionsInCategory;
     }
@@ -94,8 +95,8 @@ public class JeopardyService {
 
     public CheckAnswerResponse checkAnswer(String playerAnswer, int id) {
         Question question = questionsRepo.findById(id);
-        boolean whenToRemovePrepositions = !question.getActualQuestion().toLowerCase(Locale.ROOT).contains("preposition")
-                && !question.getActualQuestion().toLowerCase(Locale.ROOT).contains("word");
+        boolean whenToRemovePrepositions = !question.getActualquestion().toLowerCase(Locale.ROOT).contains("preposition")
+                && !question.getActualquestion().toLowerCase(Locale.ROOT).contains("word");
         String realAnswer = question.getAnswer();
         playerAnswer = playerAnswer.toLowerCase(Locale.ROOT);
         CheckAnswerResponse checkAnswerResponse = new CheckAnswerResponse(realAnswer, false);
