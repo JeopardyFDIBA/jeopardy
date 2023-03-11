@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UsersList from './components/UsersList';
 import HomePage from './pages/HomePage';
 import GamePage from './pages/GamePage';
 import FormPage from './pages/FormPage';
+import Playground from './pages/Playground';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/highscores" element={null} />
         <Route path="/game-init" element={<FormPage />} />
         <Route path="/game" element={<GamePage />} />
-        <Route path="/playground" element={null} />
+        <Route path="/playground" element={<Playground />} />
       </Routes>
     </Router>
   );
