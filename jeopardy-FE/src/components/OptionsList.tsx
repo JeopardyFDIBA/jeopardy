@@ -5,7 +5,7 @@ function OptionsList() {
   return (
     <div className={styles.optionsContainer}>
       <OptionsItem destination="/highscores" title="Highscores" />
-      <OptionsItem destination="/game" title="Get Started" />
+      <OptionsItem destination="/game-init" title="Get Started" />
       <OptionsItem destination="/playground" title="Playground" />
     </div>
   );
