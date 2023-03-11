@@ -5,7 +5,6 @@
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useRef, useState } from 'react';
 import { data } from '../mockdata';
-import Sidebar from './Sidebar';
 import styles from './Main.module.scss';
 import Column from './Column';
 

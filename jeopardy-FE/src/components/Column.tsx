@@ -1,5 +1,4 @@
 import { data } from '../mockdata';
-import Header from './Header';
 import Flipper from './Flipper';
 
 interface IProps {
@@ -15,7 +14,7 @@ function Column({ category }:{ category: string }) {
   ));
   return (
     <div style={{ display: 'block', maxWidth: '230px' }}>
-      <Header title="Question category" />
+      <h2>Question category</h2>
       <div>{column}</div>
     </div>
   );
