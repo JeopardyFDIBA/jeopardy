@@ -1,32 +1,29 @@
+import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
 import styles from './OptionsItem.module.scss';
+import StyledStuff from './StyledStuff';
 
-interface IOptionsItem {
+interface IOptionsLinkItem {
   title: string;
   destination: string;
 }
+interface IOptionsButtonItem {
+  title: string;
+  onClick: () => void;
+}
 
-function OptionsItem({ destination, title } : IOptionsItem) {
+export function OptionsLinkItem({ destination, title } : IOptionsLinkItem) {
   return (
     <Link to={destination} className={styles.button}>
-      <div className={styles.plate} />
-      <div className={styles.plate} />
-      <div className={styles.plate} />
-      <div className={styles.plate} />
-      <div className={styles.plate} />
-      <div className={styles.button__wrapper}>
-        <span className={styles.button__text}>{title}</span>
-      </div>
-      <div className={styles.button__box}>
-        <div className={styles.inner__top} />
-        <div className={styles.inner__front} />
-        <div className={styles.inner__bottom} />
-        <div className={styles.inner__back} />
-        <div className={styles.inner__left} />
-        <div className={styles.inner__right} />
-      </div>
+      <StyledStuff title={title} />
     </Link>
   );
 }
 
-export default OptionsItem;
+export function OptionsButtonItem({ title, onClick } : IOptionsButtonItem) {
+  return (
+    <Button className={styles.button} onClick={onClick}>
+      <StyledStuff title={title} />
+    </Button>
+  );
+}

@@ -1,12 +1,12 @@
-import OptionsItem from './OptionsItem';
+import { OptionsLinkItem } from './OptionsItem';
 import styles from './OptionsList.module.scss';
 
 function OptionsList() {
   return (
     <div className={styles.optionsContainer}>
-      <OptionsItem destination="/highscores" title="Highscores" />
-      <OptionsItem destination="/game-init" title="Get Started" />
-      <OptionsItem destination="/playground" title="Playground" />
+      <OptionsLinkItem destination="/highscores" title="Highscores" />
+      <OptionsLinkItem destination="/game-init" title="Get Started" />
+      <OptionsLinkItem destination="/playground" title="Playground" />
     </div>
   );
 }
