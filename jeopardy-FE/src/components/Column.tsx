@@ -14,7 +14,7 @@ function Column({ category }:{ category: string }) {
     column.push(<Flipper key={elem.id} question={elem.question} answer={elem.answer} />)
   ));
   return (
-    <div style={{ display: 'block', maxWidth: '200px' }}>
+    <div style={{ display: 'block', maxWidth: '230px' }}>
       <Header title="Question category" />
       <div>{column}</div>
     </div>

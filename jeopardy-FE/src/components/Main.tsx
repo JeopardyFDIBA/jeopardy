@@ -32,7 +32,7 @@ export default function Main() {
 
   return (
     <div className={styles.wrapper}>
-      <Sidebar />
+      {/* <Sidebar /> */}
       <div className={styles.questionsField} style={{ backgroundColor: buzzer || '#0c0734' }} ref={ref} tabIndex={-1} onKeyDown={handleKeyDown}>
         <div className={styles.questions}>
           {categories.map((elem:string, index: number) => (
