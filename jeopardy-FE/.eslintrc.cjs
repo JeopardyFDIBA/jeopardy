@@ -17,7 +17,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: './jeopardy-FE/tsconfig.json',
+    tsconfigRootDir: __dirname,
   },
   plugins: [
     'react',
