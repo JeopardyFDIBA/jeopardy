@@ -1,18 +1,15 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Button } from 'primereact/button';
 
-function PlayersInput() {
+import Input from './Input';
+
+interface IPlayerInput {
+  key: number;
+  number: string;
+  handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
+}
+function PlayersInput({ key, number, handleChange }: IPlayerInput) {
   return (
-    <div className="form-group">
-      <label htmlFor="player">Enter the number of players</label>
-      <input
-        className="form-control"
-        id="player"
-        name="player"
-        type="text"
-        placeholder="Enter player"
-      />
-    </div>
+    <Input key={key} number={number} handleChange={handleChange} label="Player" placeholder="Enter name" text="Player Name" />
   );
 }
 

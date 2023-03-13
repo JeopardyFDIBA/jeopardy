@@ -1,20 +1,18 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Button } from 'primereact/button';
+import { OptionsButtonItem } from './OptionsItem';
+import styles from './NumberInput.module.scss';
+import Input from './Input';
 
-function NumberInput({ number, handleChange, isReady }:any) {
+interface INumberInput {
+  number: string;
+  handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
+  isReady: () => void
+}
+function NumberInput({ number, handleChange, isReady }:INumberInput) {
   return (
-    <div className="form-group">
-      <label htmlFor="number">Enter the number of players</label>
-      <input
-        className="form-control"
-        id="number"
-        name="number"
-        type="text"
-        placeholder="Enter number"
-        value={number}// Prop: The number input data
-        onChange={handleChange}
-      />
-      <Button label="Next" onClick={isReady} />
+    <div className={styles.container}>
+      <Input number={number} handleChange={handleChange} label="number" placeholder="Enter number" text="Enter the number of players" />
+      <OptionsButtonItem title="Next" onClick={isReady} />
     </div>
   );
 }
