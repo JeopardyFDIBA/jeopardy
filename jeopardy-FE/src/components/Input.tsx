@@ -2,6 +2,7 @@
 import styles from './Input.module.scss';
 
 interface IInput {
+  // eslint-disable-next-line react/require-default-props
   value?: string;
   handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
   label: string;
