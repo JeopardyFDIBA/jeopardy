@@ -2,7 +2,7 @@
 import React from 'react';
 import { OptionsButtonItem } from './OptionsItem';
 import PlayersInput from './PlayersInput';
-import styles from './Form.module.scss';
+import styles from './PlayersForm.module.scss';
 
 interface IForm {
   number: string;
@@ -13,7 +13,7 @@ function Form({ number, onStepChange }: IForm) {
 
   return (
     <div className={styles.container}>
-      {players}
+      <div className={styles.playersContainer}>{players}</div>
       <OptionsButtonItem title="Prev" onClick={onStepChange} />
       <OptionsButtonItem title="Jeopardy time" onClick={() => { window.location.assign('game'); }} />
     </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import NumberInput from '../components/NumberInput';
-import Form from '../components/Form';
+import PlayersForm from '../components/PlayersForm';
 
 function FormPage() {
   const [number, setNumber] = useState('1');
@@ -26,7 +26,7 @@ function FormPage() {
         isReady={handleStepChange}
       />
       )}
-      {isReady && <Form number={number} onStepChange={handleStepChange} />}
+      {isReady && <PlayersForm number={number} onStepChange={handleStepChange} />}
     </form>
   );
 }
