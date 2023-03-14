@@ -2,14 +2,14 @@
 import styles from './Input.module.scss';
 
 interface IInput {
-  number: string;
+  value?: string;
   handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
   label: string;
   placeholder: string;
   text: string;
 }
 function Input({
-  number, handleChange, label, placeholder, text,
+  value, handleChange, label, placeholder, text,
 }: IInput) {
   return (
     <>
@@ -20,7 +20,7 @@ function Input({
         name={label}
         type="text"
         placeholder={placeholder}
-        value={number}
+        value={value}
         onChange={handleChange}
       />
     </>

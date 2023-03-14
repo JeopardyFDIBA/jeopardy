@@ -11,7 +11,7 @@ interface INumberInput {
 function NumberInput({ number, handleChange, isReady }:INumberInput) {
   return (
     <div className={styles.container}>
-      <Input number={number} handleChange={handleChange} label="number" placeholder="Enter number" text="Enter the number of players" />
+      <Input value={number} handleChange={handleChange} label="number" placeholder="Enter number" text="Enter the number of players" />
       <OptionsButtonItem title="Next" onClick={isReady} />
     </div>
   );
