@@ -66,7 +66,7 @@ public class JeopardyService {
 
     private int getRandomIdInDatabase() {
         int questionAmount = (int) questionsRepo.count();
-        return random.nextInt(questionAmount);
+        return random.nextInt(questionAmount) + 1;
     }
 
     public List<QuestionResponse> getQuestions(String category) {
