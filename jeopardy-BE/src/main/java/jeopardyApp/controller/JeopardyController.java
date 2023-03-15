@@ -59,4 +59,12 @@ public class JeopardyController {
         return ResponseEntity.ok(jeopardyService.checkAnswer(checkAnswerRequest.getAnswer(), checkAnswerRequest.getId()));
     }
 
+    @CrossOrigin
+    @PostMapping("fillNewQuestions/{numberOfQuestions}")
+    public ResponseEntity<Object> fillWithNewQuestions(@PathVariable int numberOfQuestions) {
+        jeopardyService.fillDatabaseWithQuestionsFromFile(numberOfQuestions);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
 }

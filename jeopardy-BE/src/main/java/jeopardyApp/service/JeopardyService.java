@@ -3,6 +3,10 @@ package jeopardyApp.service;
 import jeopardyApp.controller.CheckAnswerResponse;
 import jeopardyApp.controller.PlayerScoresResponse;
 import jeopardyApp.controller.QuestionResponse;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jeopardyApp.repo.Player;
@@ -10,10 +14,9 @@ import jeopardyApp.repo.PlayerRepo;
 import jeopardyApp.repo.Question;
 import jeopardyApp.repo.QuestionsRepo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class JeopardyService {
@@ -26,7 +29,7 @@ public class JeopardyService {
 
     private static final int NUMBER_OF_CATEGORIES = 5;
 
-    private static final int[] TYPES_OF_QUESTIONS_BY_POINTS = {100,200,300,400,500};
+    private static final Integer[] TYPES_OF_QUESTIONS_BY_POINTS = {100,200,300,400,500};
 
     private final Random random = new Random();
 
@@ -36,6 +39,8 @@ public class JeopardyService {
             "inside near out off from until to by about for since between without along across beyond except but around down up" +
             " into her his my their our your";
     private List<String> uselessWordsList;
+
+    private final static String FILE_WITH_QUESTIONS_NAME = "JEOPARDY_QUESTIONS1.json";
 
     @Autowired
     public JeopardyService() {
@@ -58,8 +63,18 @@ public class JeopardyService {
 
     public List<String> getCategories() {
         List<String> categories = new ArrayList<>();
-        for(int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
-            categories.add(questionsRepo.findById(getRandomIdInDatabase()).getCategory());
+        // ensures the selected category has at least one question for each value
+        int numberOfCategoriesToBeGenerated = NUMBER_OF_CATEGORIES;
+        outer:
+        for(int i = 0; i < numberOfCategoriesToBeGenerated; i++) {
+            String category = questionsRepo.findById(getRandomIdInDatabase()).getCategory();
+            for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
+                if (questionsRepo.findAllByCategoryAndScore(category, score).isEmpty()) {
+                    numberOfCategoriesToBeGenerated++;
+                    continue outer;
+                }
+            }
+            categories.add(category);
         }
         return categories;
     }
@@ -74,7 +89,7 @@ public class JeopardyService {
         List<Question> currentQuestions;
         for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
             currentQuestions = questionsRepo.findAllByCategoryAndScore(category, score);
-            Question question = currentQuestions.get(random.nextInt(currentQuestions.size() - 1));
+            Question question = currentQuestions.get(random.nextInt(currentQuestions.size()));
             allQuestionsInCategory.add(new QuestionResponse(question.getId(), question.getActualquestion(), score));
         }
         return allQuestionsInCategory;
@@ -90,7 +105,9 @@ public class JeopardyService {
     }
 
     public void updateScores(int id, int score) {
-        playerRepo.findById(id).addScore(score);
+        Player player = playerRepo.findById(id);
+        player.addScore(score);
+        playerRepo.save(player);
     }
 
     public CheckAnswerResponse checkAnswer(String playerAnswer, int id) {
@@ -125,4 +142,58 @@ public class JeopardyService {
             return checkAnswerResponse;
     }
 
+    public void fillDatabaseWithQuestionsFromFile(int numberOfQuestions) {
+
+        JSONParser parser = new JSONParser();
+        JSONArray a;
+        try {
+            List<Integer> possibleValues = Arrays.asList(TYPES_OF_QUESTIONS_BY_POINTS);
+            List<Integer> newValues = new ArrayList<>();
+            a = (JSONArray) parser.parse(new FileReader("jeopardy-BE/" + FILE_WITH_QUESTIONS_NAME));
+            int counter = 0;
+            for (Object o : a)
+            {
+                JSONObject questions = (JSONObject) o;
+
+                String category = (String) questions.get("category");
+                System.out.println(category);
+
+                String question = (String) questions.get("question");
+                System.out.println(question);
+                if (question.length() > 255) continue;
+
+                String value = (String) questions.get("value");
+                if (value == null) continue;
+                value = value.replace(",", "");
+                value = value.replace(".", "");
+                value = value.replace("$", "");
+                int questionValue = Integer.parseInt(value);
+                System.out.println(value);
+
+                // different question value mapping magic
+                if (possibleValues.size() <= newValues.size() && newValues.contains(questionValue)) {
+                    questionValue = possibleValues.get(newValues.indexOf(questionValue) % 5);
+                }
+                else if (!possibleValues.contains(questionValue)) {
+                    if (newValues.isEmpty()) newValues.add(questionValue);
+                    if (newValues.get(newValues.size() - 1) < questionValue) newValues.add(questionValue);
+                    for (int i = 0, newValuesSize = newValues.size(); i < newValuesSize; i++) {
+                        int newValue = newValues.get(i);
+                        if (questionValue < newValue) newValues.add(newValues.indexOf(newValue), questionValue);
+                    }
+                    continue;
+                }
+
+                String answer = (String) questions.get("answer");
+                System.out.println(answer);
+                questionsRepo.save(new Question(category, answer, question, questionValue));
+                if (counter >= numberOfQuestions) break;
+                counter++;
+            }
+        } catch (IOException file) {
+            System.out.println("File with questions not present at the given path");
+        } catch (ParseException e) {
+            System.out.println("File could not be parsed");;
+        }
+    }
 }
