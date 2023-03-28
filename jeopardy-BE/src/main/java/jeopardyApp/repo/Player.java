@@ -34,7 +34,7 @@ public class Player {
     }
 
     public void addScore(int score) {
-        this.score = score;
+        this.score += score;
     }
 
     public int getScore() {
