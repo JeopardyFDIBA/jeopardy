@@ -1,0 +1,31 @@
+name: Build FE
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'jeopardy-FE/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: jeopardy-FE/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Hello World!"
+    
+      - uses: actions/checkout@v3
+
+      - name: Setup Node version 18.14.2
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+
+      - name: Install dependencies
+        run: npm install
+      
