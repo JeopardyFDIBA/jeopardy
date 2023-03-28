@@ -51,6 +51,9 @@ $background-color: black;
 
 /* front pane, placed above back */
 .front {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 2;
     /* for firefox 31 */
     transform: rotateY(0deg);
@@ -58,7 +61,14 @@ $background-color: black;
 
 /* back, initially hidden pane */
 .back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transform: rotateY(180deg);
     background-color: blue;
+    padding: 0px;
+    .backText{
+        font-size: x-small;
+    }
 }
 

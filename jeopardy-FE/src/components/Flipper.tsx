@@ -11,7 +11,7 @@ function Flipper(props: any) {
           <p>{question}</p>
         </div>
         <div className="back">
-          <p>{answer}</p>
+          <p className="backText">{answer}</p>
         </div>
       </div>
     </div>

@@ -8,27 +8,22 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import Avatar from 'react-avatar';
-import { data } from '../mockdata';
 import styles from './Main.module.scss';
 import Column from './Column';
 
 let name = 'default';
 export default function Main() {
   const ref = useRef(null);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/baseURL/opening')
-      .then((response) => {
-        console.log(response.data);
-        console.log(response.status);
-        console.log(response.statusText);
-        console.log(response.headers);
-        console.log(response.config);
-      });
     const referance: any = ref.current;
     if (referance) referance.focus();
+    axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+    axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+    axios.get('http://localhost:8080/baseURL/category')
+      .then((response) => setCategories(response.data));
   }, []);
-  const categories: string[] = Object.keys(data);
   const [buzzer, setBuzzer] = useState('');
 
   const notify = (nickname: string) => toast.success('Clicked first', {
