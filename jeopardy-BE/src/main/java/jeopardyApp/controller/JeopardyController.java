@@ -18,7 +18,7 @@ public class JeopardyController {
 
     @CrossOrigin
     @PostMapping("baseURL/saveUsers")
-    public ResponseEntity<Object> savePlayers (@RequestBody String[] usernames) {
+    public ResponseEntity<Object> savePlayers(@RequestBody String[] usernames) {
         return ResponseEntity.ok(jeopardyService.savePlayers(usernames));
     }
 
