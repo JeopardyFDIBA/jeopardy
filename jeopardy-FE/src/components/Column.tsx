@@ -1,5 +1,4 @@
 import { data } from '../mockdata';
-import Header from './Header';
 import Flipper from './Flipper';
 
 interface IProps {
@@ -14,8 +13,8 @@ function Column({ category }:{ category: string }) {
     column.push(<Flipper key={elem.id} question={elem.question} answer={elem.answer} />)
   ));
   return (
-    <div style={{ display: 'block', maxWidth: '200px' }}>
-      <Header title="Question category" />
+    <div style={{ display: 'block', maxWidth: '230px' }}>
+      <h2>Question category</h2>
       <div>{column}</div>
     </div>
   );
