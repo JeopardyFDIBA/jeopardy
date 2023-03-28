@@ -13,7 +13,7 @@ function Input({
   value, handleChange, label, placeholder, text,
 }: IInput) {
   return (
-    <>
+    <div className={styles.inputContainer}>
       <label htmlFor={label}>{text}</label>
       <input
         className={styles.input}
@@ -24,7 +24,7 @@ function Input({
         value={value}
         onChange={handleChange}
       />
-    </>
+    </div>
   );
 }
 
