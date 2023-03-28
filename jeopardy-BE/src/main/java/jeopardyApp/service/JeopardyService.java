@@ -29,16 +29,16 @@ public class JeopardyService {
 
     private static final int NUMBER_OF_CATEGORIES = 5;
 
-    private static final Integer[] TYPES_OF_QUESTIONS_BY_POINTS = {100,200,300,400,500};
+    private static final Integer[] TYPES_OF_QUESTIONS_BY_POINTS = {100, 200, 300, 400, 500};
 
     private final Random random = new Random();
 
-    private List<Integer> activePlayerIds = new ArrayList<>();
+    private final List<Integer> activePlayerIds = new ArrayList<>();
 
     private static final String USELESS_WORDS = "before beneath below above on in at the a an after with under toward through within" +
             "inside near out off from until to by about for since between without along across beyond except but around down up" +
             " into her his my their our your";
-    private List<String> uselessWordsList;
+    private final List<String> uselessWordsList;
 
     private final static String FILE_WITH_QUESTIONS_NAME = "JEOPARDY_QUESTIONS1.json";
 
@@ -66,7 +66,7 @@ public class JeopardyService {
         // ensures the selected category has at least one question for each value
         int numberOfCategoriesToBeGenerated = NUMBER_OF_CATEGORIES;
         outer:
-        for(int i = 0; i < numberOfCategoriesToBeGenerated; i++) {
+        for (int i = 0; i < numberOfCategoriesToBeGenerated; i++) {
             String category = questionsRepo.findById(getRandomIdInDatabase()).getCategory();
             for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
                 if (questionsRepo.findAllByCategoryAndScore(category, score).isEmpty()) {
@@ -126,20 +126,20 @@ public class JeopardyService {
             }
         }
 
-            int playerMustMatchWords = realAnswerWords.size() / 2 + realAnswerWords.size() % 2;
-            String[] playerAnswerWords = playerAnswer.split(" ");
-            int wordMatchCounter = 0;
+        int playerMustMatchWords = realAnswerWords.size() / 2 + realAnswerWords.size() % 2;
+        String[] playerAnswerWords = playerAnswer.split(" ");
+        int wordMatchCounter = 0;
 
-            for (String word : playerAnswerWords) {
-                if (realAnswerWords.contains(word)) {
-                    wordMatchCounter++;
-                }
+        for (String word : playerAnswerWords) {
+            if (realAnswerWords.contains(word)) {
+                wordMatchCounter++;
             }
+        }
 
-            if (wordMatchCounter >= playerMustMatchWords) {
-                checkAnswerResponse.setCorrect(true);
-            }
-            return checkAnswerResponse;
+        if (wordMatchCounter >= playerMustMatchWords) {
+            checkAnswerResponse.setCorrect(true);
+        }
+        return checkAnswerResponse;
     }
 
     public void fillDatabaseWithQuestionsFromFile(int numberOfQuestions) {
@@ -151,8 +151,7 @@ public class JeopardyService {
             List<Integer> newValues = new ArrayList<>();
             a = (JSONArray) parser.parse(new FileReader("jeopardy-BE/" + FILE_WITH_QUESTIONS_NAME));
             int counter = 0;
-            for (Object o : a)
-            {
+            for (Object o : a) {
                 JSONObject questions = (JSONObject) o;
 
                 String category = (String) questions.get("category");
@@ -173,8 +172,7 @@ public class JeopardyService {
                 // different question value mapping magic
                 if (possibleValues.size() <= newValues.size() && newValues.contains(questionValue)) {
                     questionValue = possibleValues.get(newValues.indexOf(questionValue) % 5);
-                }
-                else if (!possibleValues.contains(questionValue)) {
+                } else if (!possibleValues.contains(questionValue)) {
                     if (newValues.isEmpty()) newValues.add(questionValue);
                     if (newValues.get(newValues.size() - 1) < questionValue) newValues.add(questionValue);
                     for (int i = 0, newValuesSize = newValues.size(); i < newValuesSize; i++) {
@@ -193,7 +191,7 @@ public class JeopardyService {
         } catch (IOException file) {
             System.out.println("File with questions not present at the given path");
         } catch (ParseException e) {
-            System.out.println("File could not be parsed");;
+            System.out.println("File could not be parsed");
         }
     }
 }
