@@ -10,11 +10,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import Avatar from 'react-avatar';
 import styles from './Main.module.scss';
 import Column from './Column';
+import Question from './Question';
 
 let name = 'default';
 export default function Main() {
   const ref = useRef(null);
   const [categories, setCategories] = useState([]);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const referance: any = ref.current;
@@ -49,11 +51,13 @@ export default function Main() {
     <div className={styles.wrapper}>
       <ToastContainer limit={1} />
       <div className={styles.questionsField} style={{ backgroundColor: buzzer || '#0c0734' }} ref={ref} tabIndex={-1} onKeyDown={handleKeyDown}>
-        <div className={styles.questions}>
-          {categories.map((elem:string, index: number) => (
-            <Column key={index} category={elem} />
-          ))}
-        </div>
+        {!isActive ? (
+          <div className={styles.questions}>
+            {categories.map((elem:string, index: number) => (
+              <Column key={index} category={elem} setActive={setIsActive} />
+            ))}
+          </div>
+        ) : <Question setActive={setIsActive}/>}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import axios from 'axios';
 import Flipper from './Flipper';
 import styles from './Column.module.scss';
@@ -9,7 +9,8 @@ interface IProps {
   score: number
 }
 
-function Column({ category }:{ category: string }) {
+function Column({ category, setActive }:
+{ category: string, setActive: Dispatch<SetStateAction<boolean>> }) {
   const [questions, setQuestions] = useState([]);
   useEffect(() => {
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
@@ -19,7 +20,7 @@ function Column({ category }:{ category: string }) {
   }, [category]);
   const column: JSX.Element[] = [];
   questions.map((elem: IProps) => (
-    column.push(<Flipper key={elem.id} question={`${elem.score}$`} answer={elem.actualQuestion} />)
+    column.push(<Flipper key={elem.id} score={`${elem.score}$`} answer={elem.actualQuestion} setActive={setActive} />)
   ));
   return (
     <div style={{ display: 'block', maxWidth: '230px' }}>
