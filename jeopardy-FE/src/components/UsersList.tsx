@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import Avatar from 'react-avatar';
@@ -9,11 +10,13 @@ interface IProps {
 }
 
 function UsersList() {
-  const users: IProps[] = [{ id: 1, name: 'Aleksey Svistunov' }, { id: 2, name: 'Antonina Yordanova' }, { id: 3, name: 'Kaloyan Enev' }, { id: 4, name: 'Vasil Fartsov' }];
+  const players = JSON.parse(localStorage.getItem('players') || 'no players');
+  const users: any = [];
+  Object.values(players).forEach((val:any) => users.push(val));
   return (
     <div className={styles.wrapperList}>
-      {users.map((element: { id: number, name: string }) => (
-        <Avatar key={element.id} round name={element.name} />
+      {users.map((element: { score: number, name: string }, index: number) => (
+        <Avatar key={index} round name={element.name} />
       ))}
     </div>
   );
