@@ -12,12 +12,9 @@ function FormPage() {
     if (!isReady)setIsReady(true);
     else setIsReady(false);
   };
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       {!isReady
       && (
       <NumberInput
@@ -26,8 +23,13 @@ function FormPage() {
         isReady={handleStepChange}
       />
       )}
-      {isReady && <PlayersForm number={number} onStepChange={handleStepChange} />}
-    </form>
+      {isReady && (
+      <PlayersForm
+        number={number}
+        onStepChange={handleStepChange}
+      />
+      )}
+    </div>
   );
 }
 
