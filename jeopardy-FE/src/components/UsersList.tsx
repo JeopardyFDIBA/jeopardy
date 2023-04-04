@@ -1,19 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable import/no-extraneous-dependencies */
-import React from 'react';
 import Avatar from 'react-avatar';
 import styles from './UsersList.module.scss';
-
-interface IProps {
-  id: number,
-  name: string,
-}
+import colors from '../helpers/colors';
+import players from '../helpers/players';
+import { maxInitials } from '../helpers/helpConstants';
 
 function UsersList() {
-  const users: IProps[] = [{ id: 1, name: 'Aleksey Svistunov' }, { id: 2, name: 'Antonina Yordanova' }, { id: 3, name: 'Kaloyan Enev' }, { id: 4, name: 'Vasil Fartsov' }];
+  const users: any = [];
+  const avatarColors: string[] = [];
+  Object.values(players).forEach((val:any, i) => {
+    avatarColors.push(colors[i]);
+    users.push(val);
+  });
+
   return (
     <div className={styles.wrapperList}>
-      {users.map((element: { id: number, name: string }) => (
-        <Avatar key={element.id} round name={element.name} />
+      {users.map((element: { score: number, name: string }, index: number) => (
+        <Avatar
+          key={index}
+          round
+          name={element.name}
+          maxInitials={maxInitials}
+          color={avatarColors[index]}
+        />
       ))}
     </div>
   );

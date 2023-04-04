@@ -3,14 +3,26 @@
 import { useState } from 'react';
 import Input from './Input';
 
-function PlayersInput() {
+interface IPlayersInput {
+  playerId: number,
+  allPlayers: object,
+  setAllPlayers: React.Dispatch<React.SetStateAction<object>>
+}
+
+function PlayersInput({ playerId, allPlayers, setAllPlayers }: IPlayersInput) {
   const [players, setPlayers] = useState('');
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setPlayers(e.currentTarget.value);
-    console.log(players);
+    setAllPlayers({
+      ...allPlayers,
+      [`player${playerId}`]: {
+        name: e.currentTarget.value,
+        score: 100,
+      },
+    });
   };
   return (
-    <Input value={players} handleChange={handleChange} label="number" placeholder="Enter name" text="Player: " />
+    <Input value={players} handleChange={handleChange} label="number" placeholder="Enter name" text={`Player ${playerId + 1}: `} />
   );
 }
 
