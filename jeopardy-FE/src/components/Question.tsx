@@ -1,16 +1,35 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import Input from './Input';
 import styles from './Question.module.scss';
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-function Question({ setActive }: { setActive: Dispatch<SetStateAction<boolean>> }) {
+
+interface IQuestion {
+  setActive: Dispatch<SetStateAction<boolean>>,
+  questionObject: { score: string, question: string } | undefined,
+  isInputBlocked: boolean;
+  setBuzzer: Dispatch<SetStateAction<string>>;
+}
+
+function Question({
+  setActive, questionObject, isInputBlocked, setBuzzer,
+} :IQuestion) {
+  const [value, setValue] = useState('');
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setValue(e.currentTarget.value);
+  };
   return (
-    <div
+    <form
       className={styles.questionFocus}
-      onClick={() => setActive(false)}
+      onSubmit={(e) => { e.preventDefault(); setActive(false); setBuzzer('#0c0734'); }}
     >
-      Question
-    </div>
+      <Input
+        handleChange={handleChange}
+        value={value}
+        label={questionObject?.question || 'error'}
+        placeholder="Enter your answer"
+        text={questionObject?.question || 'error'}
+        disabled={isInputBlocked}
+      />
+    </form>
   );
 }
 
