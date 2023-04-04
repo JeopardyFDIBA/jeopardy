@@ -2,20 +2,21 @@
 import styles from './Input.module.scss';
 
 interface IInput {
-  // eslint-disable-next-line react/require-default-props
   value?: string;
   handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
   label: string;
   placeholder: string;
   text: string;
+  disabled?: boolean;
 }
 function Input({
-  value, handleChange, label, placeholder, text,
+  value, handleChange, label, placeholder, text, disabled,
 }: IInput) {
   return (
     <div className={styles.inputContainer}>
       <label htmlFor={label}>{text}</label>
       <input
+        disabled={disabled}
         className={styles.input}
         id={label}
         name={label}
@@ -28,4 +29,8 @@ function Input({
   );
 }
 
+Input.defaultProps = {
+  disabled: false,
+  value: '',
+};
 export default Input;
