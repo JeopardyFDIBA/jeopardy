@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch, SetStateAction, useEffect, useState,
+} from 'react';
 import axios from 'axios';
 import Flipper from './Flipper';
 import styles from './Column.module.scss';
@@ -9,8 +11,19 @@ interface IProps {
   score: number
 }
 
-function Column({ category, setActive }:
-{ category: string, setActive: Dispatch<SetStateAction<boolean>> }) {
+interface IColumn {
+  category: string,
+  setActive: Dispatch<SetStateAction<boolean>>,
+  setIsInputBlocked: Dispatch<SetStateAction<boolean>>,
+  setSelectedQuestion: Dispatch<SetStateAction<{
+    score: string;
+    question: string;
+  } | undefined>>
+}
+
+function Column({
+  category, setActive, setSelectedQuestion, setIsInputBlocked,
+}:IColumn) {
   const [questions, setQuestions] = useState([]);
   useEffect(() => {
     axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
@@ -20,7 +33,14 @@ function Column({ category, setActive }:
   }, [category]);
   const column: JSX.Element[] = [];
   questions.map((elem: IProps) => (
-    column.push(<Flipper key={elem.id} score={`${elem.score}$`} answer={elem.actualQuestion} setActive={setActive} />)
+    column.push(<Flipper
+      key={elem.id}
+      score={`${elem.score}$`}
+      question={elem.actualQuestion}
+      setActive={setActive}
+      setSelectedQuestion={setSelectedQuestion}
+      setIsInputBlocked={setIsInputBlocked}
+    />)
   ));
   return (
     <div style={{ display: 'block', maxWidth: '230px' }}>
