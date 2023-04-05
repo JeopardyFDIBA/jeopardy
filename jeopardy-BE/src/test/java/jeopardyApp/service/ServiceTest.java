@@ -5,7 +5,6 @@ import jeopardyApp.repo.Player;
 import jeopardyApp.repo.PlayerRepo;
 import jeopardyApp.repo.Question;
 import jeopardyApp.repo.QuestionsRepo;
-import org.junit.experimental.categories.Categories;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,11 +54,6 @@ class ServiceTest {
 
     @Test
     public void getOpeningQuestionsTest() {
-        List<Integer> ids = new ArrayList<>();
-        ids.add(1);
-        ids.add(2);
-        ids.add(3);
-        String[] users = new String[]{"1", "2", "3"};
         question.setActualquestion("actualQuestion");
         question.setAnswer("answer");
         question.setCategory("category");
@@ -79,11 +70,6 @@ class ServiceTest {
 
     @Test
     public void getCategoriesTest() {
-        List<Integer> ids = new ArrayList<>();
-        ids.add(1);
-        ids.add(2);
-        ids.add(3);
-        String[] users = new String[]{"1", "2", "3"};
         question.setActualquestion("actualQuestion");
         question.setAnswer("answer");
         question.setCategory("category");
@@ -102,5 +88,25 @@ class ServiceTest {
 
         // Assert
         Assertions.assertEquals(actual.get(0), question.getCategory());
+    }
+
+    @Test
+    public void getQuestionsTest() {
+        question.setActualquestion("actualQuestion");
+        question.setAnswer("answer");
+        question.setCategory("category");
+        question.setScore(0);
+        List<Question> questionsInCategory = new ArrayList<>();
+        questionsInCategory.add(question);
+        when(questionsRepo.findAllByCategoryAndScore(question.getActualquestion(), 100)).thenReturn(questionsInCategory);
+        when(questionsRepo.findAllByCategoryAndScore(question.getActualquestion(), 200)).thenReturn(questionsInCategory);
+        when(questionsRepo.findAllByCategoryAndScore(question.getActualquestion(), 300)).thenReturn(questionsInCategory);
+        when(questionsRepo.findAllByCategoryAndScore(question.getActualquestion(), 400)).thenReturn(questionsInCategory);
+        when(questionsRepo.findAllByCategoryAndScore(question.getActualquestion(), 500)).thenReturn(questionsInCategory);
+
+        List<QuestionResponse> actual = service.getQuestions(question.getCategory());
+
+        // Assert
+        Assertions.assertEquals(actual.get(0).getActualQuestion(), question.getActualquestion());
     }
 }

@@ -131,8 +131,10 @@ public class JeopardyService {
         int wordMatchCounter = 0;
 
         for (String word : playerAnswerWords) {
-            if (realAnswerWords.contains(word)) {
-                wordMatchCounter++;
+            for (String correctWord : realAnswerWords) {
+                if (calculateLevenshteinDistance(word, correctWord) <= 0.33 * correctWord.length()) {
+                    wordMatchCounter++;
+                }
             }
         }
 
@@ -193,5 +195,31 @@ public class JeopardyService {
         } catch (ParseException e) {
             System.out.println("File could not be parsed");
         }
+    }
+
+    private int calculateLevenshteinDistance(String x, String y) {
+        if (x.isEmpty()) {
+            return y.length();
+        }
+
+        if (y.isEmpty()) {
+            return x.length();
+        }
+
+        int substitution = calculateLevenshteinDistance(x.substring(1), y.substring(1))
+                + costOfSubstitution(x.charAt(0), y.charAt(0));
+        int insertion = calculateLevenshteinDistance(x, y.substring(1)) + 1;
+        int deletion = calculateLevenshteinDistance(x.substring(1), y) + 1;
+
+        return min(substitution, insertion, deletion);
+    }
+
+    private int costOfSubstitution(char a, char b) {
+        return a == b ? 0 : 1;
+    }
+
+    private int min(int... numbers) {
+        return Arrays.stream(numbers)
+                .min().orElse(Integer.MAX_VALUE);
     }
 }
