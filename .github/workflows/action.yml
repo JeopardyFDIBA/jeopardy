@@ -60,9 +60,11 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
+          organization: "fdiba"
+          projectKey: "frontend"
           args: >
             -Dsonar.organization=fdiba
-            -Dsonar.projectKey=jeopardy-FE
+            -Dsonar.projectKey=frontend
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
