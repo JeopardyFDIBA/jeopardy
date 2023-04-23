@@ -57,19 +57,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run SonarScanner
-        uses: sonarsource/sonar-scanner-cli@master
+      - name: SonarCloud
+      - uses: actions/checkout@v3
         with:
-          entryPoint: sonar-scanner
-          args: >
-            -Dsonar.projectKey=JeopardyFDIBA_jeopardy
-            -Dsonar.organization=fdiba
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          extraProperties: >
-            sonar.nodejs.executable=C:\Program Files\nodejs\node.exe
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_SCANNER_OPTS: -Xmx4096m
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
