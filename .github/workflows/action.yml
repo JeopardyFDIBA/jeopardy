@@ -60,7 +60,6 @@ jobs:
        uses: sonarsource/sonarcloud-github-action@v1.6
        with:
         projectBaseDir: jeopardy-FE
-        node-version: 16
         args: >
          -Dsonar.organization=fdiba
          -Dsonar.projectKey=JeopardyFDIBA_jeopardy
