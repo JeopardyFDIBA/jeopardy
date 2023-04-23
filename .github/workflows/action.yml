@@ -54,6 +54,8 @@ jobs:
       - name: Install dependencies
         working-directory: jeopardy-FE
         run: npm install
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Run SonarScanner
         uses: sonarsource/sonar-scanner-cli@master
