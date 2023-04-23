@@ -39,8 +39,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeopardyFDIBA_jeopardy
+    
+      
   reactCI:
     runs-on: ubuntu-latest
+    docker:
+      - image: 'node:16.14.0'
     steps:
       - uses: actions/checkout@v3
 
