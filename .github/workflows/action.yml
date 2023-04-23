@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js version
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '16.x'
 
@@ -58,11 +58,12 @@ jobs:
       - name: Run SonarScanner
         uses: sonarsource/sonarcloud-github-action@master
         with:
-          organization: "fdiba"
-          projectKey: "JeopardyFDIBA_jeopardy"
-          token: ${{ secrets.SONAR_TOKEN }}
+          args: >
+            -Dsonar.projectKey=JeopardyFDIBA_jeopardy
+            -Dsonar.organization=fdiba
           extraProperties: >
             sonar.nodejs.executable=/usr/bin/node
+        projectBaseDir: jeopardy-FE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_SCANNER_OPTS: -Xmx4096m
