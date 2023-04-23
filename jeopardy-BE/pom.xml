@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
  		<sonar.organization>fdiba</sonar.organization>
  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.nodejs.executable>C:\Program Files\nodejs\node.exe</sonar.nodejs.executable>
 	</properties>
 	<dependencies>
 		<dependency>
