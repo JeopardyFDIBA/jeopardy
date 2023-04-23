@@ -61,9 +61,11 @@ jobs:
           args: >
             -Dsonar.projectKey=JeopardyFDIBA_jeopardy
             -Dsonar.organization=fdiba
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
           extraProperties: >
             sonar.nodejs.executable=/usr/bin/node
-        projectBaseDir: jeopardy-FE
+        working-directory: jeopardy-FE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_SCANNER_OPTS: -Xmx4096m
