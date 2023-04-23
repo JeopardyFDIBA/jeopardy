@@ -67,7 +67,7 @@ jobs:
           args: >
             -Dsonar.projectKey=JeopardyFDIBA_jeopardy
             -Dsonar.organization=fdiba
-            -Dsonar.nodejs.executable=C:\Program Files\nodejs\node.exe
+            -Dsonar.nodejs.executable="C:\Program Files\nodejs\node.exe"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
