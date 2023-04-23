@@ -63,7 +63,7 @@ jobs:
           token: ${{ secrets.SONAR_TOKEN }}
           extraProperties: >
             sonar.nodejs.executable=/usr/bin/node
-          env:
+        env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             SONAR_SCANNER_OPTS: -Xmx4096m
 
