@@ -1,30 +1,75 @@
-name: Build FE
+name: JeopardyCI
 
 on:
   push:
-    branches:
-      - master
-    paths:
-      - 'jeopardy-FE/**'
-  workflow_dispatch:
-
-defaults:
-  run:
-    working-directory: jeopardy-FE/
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    
       - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "adopt"
+      - name: Build with Maven
+        working-directory: jeopardy-BE
+        run: mvn --batch-mode --update-snapshots package
 
-      - name: Setup Node version 18.15.0
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        working-directory: jeopardy-BE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeopardyFDIBA_jeopardy
+    
+      
+  reactCI:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: 18.15.0
+          node-version: '16.x'
 
       - name: Install dependencies
+        working-directory: jeopardy-FE
         run: npm install
-      
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SonarCloud
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=JeopardyFDIBA_jeopardy
+            -Dsonar.organization=fdiba
+            -Dsonar.nodejs.executable=C:/PROGRA~1/nodejs/node.exe
+            -Dsonar.exclusions=**/*.java
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
