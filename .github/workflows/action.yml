@@ -68,6 +68,7 @@ jobs:
             -Dsonar.projectKey=JeopardyFDIBA_jeopardy
             -Dsonar.organization=fdiba
             -Dsonar.nodejs.executable=C:/PROGRA~1/nodejs/node.exe
+            -Dsonar.exclusions=**/*.java
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
