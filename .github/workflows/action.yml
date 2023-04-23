@@ -56,8 +56,9 @@ jobs:
         run: npm install
 
       - name: Run SonarScanner
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: sonarsource/sonar-scanner-cli@master
         with:
+          entryPoint: sonar-scanner
           args: >
             -Dsonar.projectKey=JeopardyFDIBA_jeopardy
             -Dsonar.organization=fdiba
