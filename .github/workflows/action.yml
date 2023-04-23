@@ -62,7 +62,7 @@ jobs:
         with:
           args: >
             -Dsonar.organization=fdiba
-            -Dsonar.projectKey=JeopardyFDIBA_jeopardy
+            -Dsonar.projectKey=jeopardy-FE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
