@@ -39,25 +39,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JeopardyFDIBA_jeopardy
-
-  sonarcloud:
-    name: Build (Sonar Cloud)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          working-directory: jeopardy-FE
-          args: >
-            -Dsonar.organization=fdiba
-            -Dsonar.projectKey=JeopardyFDIBA_jeopardy
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "16"
-
-      - name: Node install dependencies
-        run: npm install
   reactCI:
     runs-on: ubuntu-latest
     steps:
