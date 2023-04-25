@@ -3,16 +3,13 @@ package jeopardyApp.service;
 import jeopardyApp.controller.CheckAnswerResponse;
 import jeopardyApp.controller.PlayerScoresResponse;
 import jeopardyApp.controller.QuestionResponse;
+import jeopardyApp.repo.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jeopardyApp.repo.Player;
-import jeopardyApp.repo.PlayerRepo;
-import jeopardyApp.repo.Question;
-import jeopardyApp.repo.QuestionsRepo;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,20 +24,25 @@ public class JeopardyService {
     @Autowired
     private PlayerRepo playerRepo;
 
+    @Autowired
+    private GameRepo gameRepo;
+
     private static final int NUMBER_OF_CATEGORIES = 5;
+
+    private static final int NUMBER_OF_SHOWN_HIGHSCORES = 5;
 
     private static final Integer[] TYPES_OF_QUESTIONS_BY_POINTS = {100, 200, 300, 400, 500};
 
     private final Random random = new Random();
 
-    private final List<Integer> activePlayerIds = new ArrayList<>();
+    private final List<Player> activePlayers = new ArrayList<>();
 
     private static final String USELESS_WORDS = "before beneath below above on in at the a an after with under toward through within" +
             "inside near out off from until to by about for since between without along across beyond except but around down up" +
             " into her his my their our your";
     private final List<String> uselessWordsList;
 
-    private final static String FILE_WITH_QUESTIONS_NAME = "JEOPARDY_QUESTIONS1.json";
+    private static final String FILE_WITH_QUESTIONS_NAME = "JEOPARDY_QUESTIONS1.json";
 
     @Autowired
     public JeopardyService() {
@@ -48,11 +50,22 @@ public class JeopardyService {
     }
 
     public List<Integer> savePlayers(String[] usernames) {
+        List<Integer> playerIds = new ArrayList<>();
         for (String username : usernames) {
-            activePlayerIds.add(playerRepo.save(new Player(username, 0)).getId());
+            Player currentPlayer = new Player(username, 0);
+            activePlayers.add(playerRepo.save(currentPlayer));
+            playerIds.add(currentPlayer.getId());
         }
+        gameRepo.save(new Game(activePlayers));
+        return playerIds;
+    }
 
-        return activePlayerIds;
+    public List<PlayerScoresResponse> getPlayers() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
+        for (Player player : activePlayers) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
+        }
+        return players;
     }
 
     public QuestionResponse getOpeningQuestion() {
@@ -95,11 +108,44 @@ public class JeopardyService {
         return allQuestionsInCategory;
     }
 
-    public List<PlayerScoresResponse> getHighScores() {
+    public List<PlayerScoresResponse> getHighScores(int gameId) {
         List<PlayerScoresResponse> players = new ArrayList<>();
-        for (int id : activePlayerIds) {
-            int playerScore = playerRepo.findById(id).getScore();
-            players.add(new PlayerScoresResponse(id, playerScore));
+        Game game = gameRepo.findById(gameId);
+        // sort players
+        Player[] topPlayerScoresInGame = sortPlayersByHighScores(game.getPlayers());
+        for (Player player : topPlayerScoresInGame) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
+        }
+        return players;
+    }
+
+    private Player[] sortPlayersByHighScores(List<Player> players) {
+        Player[] topPlayerScoresInGame = new Player[NUMBER_OF_SHOWN_HIGHSCORES];
+        outer:
+        for (Player player : players) {
+            for (int i = 0; i < NUMBER_OF_SHOWN_HIGHSCORES; i++) {
+                if (topPlayerScoresInGame[i] == null) {
+                    topPlayerScoresInGame[i] = player;
+                    continue outer;
+                }
+                if (topPlayerScoresInGame[i].getScore() < player.getScore()) {
+                    int counter = NUMBER_OF_SHOWN_HIGHSCORES - 1;
+                    while (counter > i) {
+                        topPlayerScoresInGame[counter] = topPlayerScoresInGame[counter - 1];
+                        counter--;
+                    }
+                    topPlayerScoresInGame[i] = player;
+                }
+            }
+        }
+        return topPlayerScoresInGame;
+    }
+
+    public List<PlayerScoresResponse> getCurrentHighScores() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
+        Player[] topPlayerScoresInGame = sortPlayersByHighScores(activePlayers);
+        for (Player player : topPlayerScoresInGame) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
         }
         return players;
     }
