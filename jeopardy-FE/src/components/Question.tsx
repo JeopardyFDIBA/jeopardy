@@ -7,19 +7,21 @@ interface IQuestion {
   questionObject: { score: string, question: string } | undefined,
   isInputBlocked: boolean;
   setBuzzer: Dispatch<SetStateAction<string>>;
+  setAnswer: Dispatch<SetStateAction<string>>;
 }
 
 function Question({
-  setActive, questionObject, isInputBlocked, setBuzzer,
+  setActive, questionObject, isInputBlocked, setBuzzer, setAnswer,
 } :IQuestion) {
   const [value, setValue] = useState('');
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setValue(e.currentTarget.value);
+    setAnswer(e.currentTarget.value);
   };
   return (
     <form
       className={styles.questionFocus}
-      onSubmit={(e) => { e.preventDefault(); setActive(false); setBuzzer('#0c0734'); }}
+      onSubmit={(e) => { e.preventDefault(); setActive(false); setBuzzer('#0c0734'); setValue(''); }}
     >
       <Input
         handleChange={handleChange}
