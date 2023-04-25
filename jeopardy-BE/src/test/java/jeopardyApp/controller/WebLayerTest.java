@@ -46,7 +46,7 @@ public class WebLayerTest {
         String[] users = new String[]{"1, 2, 3"};
         when(jeopardyService.savePlayers(users)).thenReturn(ids);
 
-        this.mockMvc.perform(post("http://localhost:8080/baseURL/saveUsers", 1).content(objectMapper.writeValueAsString(users))
+        this.mockMvc.perform(post("http://localhost:8080/saveUsers", 1).content(objectMapper.writeValueAsString(users))
                 .contentType("application/json")).andDo(print())
                 .andExpect(status().isOk()).andExpect(content().string("[1,2,3]"));
     }

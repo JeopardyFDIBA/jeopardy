@@ -29,6 +29,12 @@ public class JeopardyController {
     }
 
     @CrossOrigin
+    @GetMapping("players")
+    public ResponseEntity<Object> getActivePlayers() {
+        return ResponseEntity.ok(jeopardyService.getPlayers());
+    }
+
+    @CrossOrigin
     @GetMapping("question/{category}")
     public ResponseEntity<Object> getQuestions(@PathVariable String category) {
         return ResponseEntity.ok(jeopardyService.getQuestions(category));
@@ -44,6 +50,12 @@ public class JeopardyController {
     @GetMapping("highscores/{gameId}")
     public ResponseEntity<Object> getHighscores(@PathVariable int gameId) {
         return ResponseEntity.ok(jeopardyService.getHighScores(gameId));
+    }
+
+    @CrossOrigin
+    @GetMapping("highscores")
+    public ResponseEntity<Object> getHighscores() {
+        return ResponseEntity.ok(jeopardyService.getCurrentHighScores());
     }
 
     @CrossOrigin

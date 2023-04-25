@@ -54,7 +54,9 @@ public class JeopardyService {
         for (String username : usernames) {
             Player currentPlayer = new Player(username, 0);
             activePlayers.add(playerRepo.save(currentPlayer));
-            playerIds.add(currentPlayer.getId());
+        }
+        for (Player player : activePlayers) {
+            playerIds.add(player.getId());
         }
         gameRepo.save(new Game(activePlayers));
         return playerIds;
@@ -120,21 +122,30 @@ public class JeopardyService {
     }
 
     private Player[] sortPlayersByHighScores(List<Player> players) {
-        Player[] topPlayerScoresInGame = new Player[NUMBER_OF_SHOWN_HIGHSCORES];
+        int numberOfHighScores;
+        if (players.size() > 5) {
+            numberOfHighScores = NUMBER_OF_SHOWN_HIGHSCORES;
+        }
+        else {
+            numberOfHighScores = players.size();
+        }
+        Player[] topPlayerScoresInGame = new Player[numberOfHighScores];
+
         outer:
         for (Player player : players) {
-            for (int i = 0; i < NUMBER_OF_SHOWN_HIGHSCORES; i++) {
+            for (int i = 0; i < numberOfHighScores; i++) {
                 if (topPlayerScoresInGame[i] == null) {
                     topPlayerScoresInGame[i] = player;
                     continue outer;
                 }
                 if (topPlayerScoresInGame[i].getScore() < player.getScore()) {
-                    int counter = NUMBER_OF_SHOWN_HIGHSCORES - 1;
+                    int counter = numberOfHighScores - 1;
                     while (counter > i) {
                         topPlayerScoresInGame[counter] = topPlayerScoresInGame[counter - 1];
                         counter--;
                     }
                     topPlayerScoresInGame[i] = player;
+                    continue outer;
                 }
             }
         }
@@ -171,8 +182,13 @@ public class JeopardyService {
                 realAnswerWords.remove(uselessWord);
             }
         }
-
-        int playerMustMatchWords = realAnswerWords.size() / 2 + realAnswerWords.size() % 2;
+        int playerMustMatchWords;
+        if (realAnswerWords.size() == 2) {
+            playerMustMatchWords = realAnswerWords.size() / 2 + 1;
+        }
+        else {
+            playerMustMatchWords = realAnswerWords.size() / 2 + realAnswerWords.size() % 2;
+        }
         String[] playerAnswerWords = playerAnswer.split(" ");
         int wordMatchCounter = 0;
 
@@ -197,7 +213,8 @@ public class JeopardyService {
         try {
             List<Integer> possibleValues = Arrays.asList(TYPES_OF_QUESTIONS_BY_POINTS);
             List<Integer> newValues = new ArrayList<>();
-            a = (JSONArray) parser.parse(new FileReader("jeopardy-BE/" + FILE_WITH_QUESTIONS_NAME));
+            // Try adding "jeopardy-BE/" + if it does not work locally
+            a = (JSONArray) parser.parse(new FileReader(FILE_WITH_QUESTIONS_NAME));
             int counter = 0;
             for (Object o : a) {
                 JSONObject questions = (JSONObject) o;
