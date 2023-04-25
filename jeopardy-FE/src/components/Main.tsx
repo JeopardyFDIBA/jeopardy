@@ -1,64 +1,114 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/tabindex-no-positive */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/no-array-index-key */
 import { useEffect, useRef, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
-import 'react-toastify/dist/ReactToastify.css';
 import Avatar from 'react-avatar';
-import { data } from '../mockdata';
+import axios from 'axios';
+import colors from '../helpers/colors';
+import 'react-toastify/dist/ReactToastify.css';
 import styles from './Main.module.scss';
-import Column from './Column';
+import Question from './Question';
+import players from '../helpers/players';
+import QuestionsMatrix from './QuestionsMatrix';
 
-let name = 'default';
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+
 export default function Main() {
   const ref = useRef(null);
+  const [categories, setCategories] = useState([]);
+  const [isActive, setIsActive] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<{ score: string, question: string }>();
+  const [buzzer, setBuzzer] = useState('');
+  const [isInputBlocked, setIsBlockedInput] = useState(true);
+  const [hasGameStarted, setHasGameStarted] = useState(false);
+  const [opening, setOpening] = useState<{ score: string, question: string, id: string }>();
+  const [answer, setAnswer] = useState('');
+  const [shouldTryAgain, setShouldTryAgain] = useState(20);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/baseURL/opening')
-      .then((response) => {
-        console.log(response.data);
-        console.log(response.status);
-        console.log(response.statusText);
-        console.log(response.headers);
-        console.log(response.config);
-      });
     const referance: any = ref.current;
     if (referance) referance.focus();
+    axios.get('http://localhost:8080/baseURL/category')
+      .then((response) => setCategories(response.data));
   }, []);
-  const categories: string[] = Object.keys(data);
-  const [buzzer, setBuzzer] = useState('');
 
-  const notify = (nickname: string) => toast.success('Clicked first', {
+  useEffect(() => {
+    const referance: any = ref.current;
+    if (referance) referance.focus();
+    axios.get('http://localhost:8080/baseURL/opening')
+      .then((response) => {
+        setOpening({
+          score: response.data.score,
+          question: response.data.actualQuestion,
+          id: response.data.id,
+        });
+      });
+  }, [shouldTryAgain]);
+
+  const notify = (nickname: string, color?: string) => toast.success('Clicked first', {
     toastId: nickname,
-    // eslint-disable-next-line react/no-unstable-nested-components
-    icon: ({ theme, type }) => <Avatar round name={name} />,
+    icon: () => <Avatar round name={nickname} color={color} />,
   });
 
   const handleKeyDown = (event:any) => {
-    toast.clearWaitingQueue();
-    if (!toast.isActive(name)) {
-      switch (event.key) {
-        case '1': name = 'Aleksey Svistunov'; notify(name); setBuzzer('#a62a21'); break;
-        case '2': name = 'Antonina Yordanova'; notify(name); setBuzzer('#b3003c'); break;
-        case '3': name = 'Kaloyan Enev'; notify(name); setBuzzer('#3a6024'); break;
-        case '4': name = 'Vasil Fartsov'; notify(name); setBuzzer('#0b51c1'); break;
-        default: break;
+    if (event.key === 'Enter') {
+      axios.post('http://localhost:8080/checkAnswer', {
+        id: opening?.id,
+        answer,
+      }).then((response) => {
+        if (response.data.correct) setHasGameStarted(true);
+        else {
+          setIsBlockedInput(true); setShouldTryAgain(shouldTryAgain - 1);
+        }
+      });
+    } else if (event.key >= 1 && event.key <= 9) {
+      toast.clearWaitingQueue();
+      const { name } = players[`player${event.key - 1}`];
+      if (!toast.isActive(name)) {
+        if ((event.key >= 1 || event.key <= 9) && !isInputBlocked) {
+          notify(name, colors[event.key - 1]);
+          setBuzzer(colors[event.key - 1]);
+        }
+        setIsBlockedInput(false);
       }
     }
+  };
+
+  const sharedQuestionProps = {
+    isInputBlocked,
+    setActive: setIsActive,
+    setBuzzer,
+    setAnswer,
   };
 
   return (
     <div className={styles.wrapper}>
       <ToastContainer limit={1} />
       <div className={styles.questionsField} style={{ backgroundColor: buzzer || '#0c0734' }} ref={ref} tabIndex={-1} onKeyDown={handleKeyDown}>
-        <div className={styles.questions}>
-          {categories.map((elem:string, index: number) => (
-            <Column key={index} category={elem} />
-          ))}
-        </div>
+        {hasGameStarted ? (!isActive ? (
+          <QuestionsMatrix
+            categories={categories}
+            setActive={setIsActive}
+            setIsInputBlocked={setIsBlockedInput}
+            setSelectedQuestion={setSelectedQuestion}
+          />
+        ) : (
+          <Question
+            {...sharedQuestionProps}
+            questionObject={selectedQuestion}
+          />
+        )) : (
+          <Question
+            {...sharedQuestionProps}
+            questionObject={opening}
+          />
+        )}
       </div>
     </div>
   );

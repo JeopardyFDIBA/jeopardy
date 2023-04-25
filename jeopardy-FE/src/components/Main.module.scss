@@ -1,6 +1,6 @@
 .wrapper{
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     
 }
 .questionsField{
@@ -8,8 +8,4 @@
 }
 .questionsField:focus-visible {
     outline: 0px;
-}
-.questions{
-    display: flex;
-    justify-content: center;
 }
