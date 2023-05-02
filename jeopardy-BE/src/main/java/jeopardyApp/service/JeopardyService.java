@@ -92,7 +92,12 @@ public class JeopardyService {
         int numberOfCategoriesToBeGenerated = NUMBER_OF_CATEGORIES;
         outer:
         for (int i = 0; i < numberOfCategoriesToBeGenerated; i++) {
-            String category = questionsRepo.findById(getRandomIdInDatabase()).getCategory();
+            Question question = questionsRepo.findById(getRandomIdInDatabase());
+            if (question == null) {
+                numberOfCategoriesToBeGenerated++;
+                continue;
+            }
+            String category = question.getCategory();
             for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
                 if (questionsRepo.findAllByCategoryAndScore(category, score).isEmpty()) {
                     numberOfCategoriesToBeGenerated++;
