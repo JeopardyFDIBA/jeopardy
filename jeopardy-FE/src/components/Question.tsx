@@ -1,18 +1,23 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import Input from './Input';
 import styles from './Question.module.scss';
+import { IQuestion } from '../sharedInterfaces';
 
-interface IQuestion {
-  setActive: Dispatch<SetStateAction<boolean>>,
-  questionObject: { score: string, question: string } | undefined,
+interface IQuestionComponent {
+  setActive: Dispatch<SetStateAction<boolean>>;
+  questionObject: IQuestion | undefined;
   isInputBlocked: boolean;
   setBuzzer: Dispatch<SetStateAction<string>>;
   setAnswer: Dispatch<SetStateAction<string>>;
 }
 
 function Question({
-  setActive, questionObject, isInputBlocked, setBuzzer, setAnswer,
-} :IQuestion) {
+  setActive,
+  questionObject,
+  isInputBlocked,
+  setBuzzer,
+  setAnswer,
+}: IQuestionComponent) {
   const [value, setValue] = useState('');
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setValue(e.currentTarget.value);
@@ -21,7 +26,12 @@ function Question({
   return (
     <form
       className={styles.questionFocus}
-      onSubmit={(e) => { e.preventDefault(); setActive(false); setBuzzer('#0c0734'); setValue(''); }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        setActive(false);
+        setBuzzer('#0c0734');
+        setValue('');
+      }}
     >
       <Input
         handleChange={handleChange}

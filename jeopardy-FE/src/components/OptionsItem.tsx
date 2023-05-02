@@ -11,7 +11,7 @@ interface IOptionsButtonItem {
   onClick: () => void;
 }
 
-export function OptionsLinkItem({ destination, title } : IOptionsLinkItem) {
+export function OptionsLinkItem({ destination, title }: IOptionsLinkItem) {
   return (
     <Link to={destination} className={styles.button}>
       <div>{title}</div>
@@ -19,7 +19,7 @@ export function OptionsLinkItem({ destination, title } : IOptionsLinkItem) {
   );
 }
 
-export function OptionsButtonItem({ title, onClick } : IOptionsButtonItem) {
+export function OptionsButtonItem({ title, onClick }: IOptionsButtonItem) {
   return (
     <Button className={styles.button} onClick={onClick}>
       <div>{title}</div>

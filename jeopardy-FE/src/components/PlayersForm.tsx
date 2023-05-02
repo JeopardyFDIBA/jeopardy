@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { FormEvent, useState } from 'react';
+import axios from 'axios';
 import { OptionsButtonItem } from './OptionsItem';
 import PlayersInput from './PlayersInput';
 import styles from './PlayersForm.module.scss';
@@ -22,14 +23,21 @@ function PlayersForm({ number, onStepChange }: IPlayersForm) {
   ));
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem('players', JSON.stringify(allPlayers));
+    const playersArr = Object.values(allPlayers).map(
+      (player: any) => player.name,
+    );
+    axios
+      .post('http://localhost:8080/saveUsers', JSON.stringify(playersArr))
+      .then(() => {
+        window.location.assign('game');
+      });
   };
 
   return (
     <form className={styles.container} onSubmit={handleSubmit}>
       <div className={styles.playersContainer}>{players}</div>
       <OptionsButtonItem title="Prev" onClick={onStepChange} />
-      <OptionsButtonItem title="Jeopardy time" onClick={() => { window.location.assign('game'); }} />
+      <OptionsButtonItem title="Jeopardy time" onClick={() => handleSubmit} />
     </form>
   );
 }

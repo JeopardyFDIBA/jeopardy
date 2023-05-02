@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Input from './Input';
 
 interface IPlayersInput {
-  playerId: number,
-  allPlayers: object,
-  setAllPlayers: React.Dispatch<React.SetStateAction<object>>
+  playerId: number;
+  allPlayers: object;
+  setAllPlayers: React.Dispatch<React.SetStateAction<object>>;
 }
 
 function PlayersInput({ playerId, allPlayers, setAllPlayers }: IPlayersInput) {
@@ -22,7 +22,13 @@ function PlayersInput({ playerId, allPlayers, setAllPlayers }: IPlayersInput) {
     });
   };
   return (
-    <Input value={players} handleChange={handleChange} label="number" placeholder="Enter name" text={`Player ${playerId + 1}: `} />
+    <Input
+      value={players}
+      handleChange={handleChange}
+      label="number"
+      placeholder="Enter name"
+      text={`Player ${playerId + 1}: `}
+    />
   );
 }
 

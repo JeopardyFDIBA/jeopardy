@@ -3,16 +3,13 @@ package jeopardyApp.service;
 import jeopardyApp.controller.CheckAnswerResponse;
 import jeopardyApp.controller.PlayerScoresResponse;
 import jeopardyApp.controller.QuestionResponse;
+import jeopardyApp.repo.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jeopardyApp.repo.Player;
-import jeopardyApp.repo.PlayerRepo;
-import jeopardyApp.repo.Question;
-import jeopardyApp.repo.QuestionsRepo;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,20 +24,27 @@ public class JeopardyService {
     @Autowired
     private PlayerRepo playerRepo;
 
+    @Autowired
+    private GameRepo gameRepo;
+
     private static final int NUMBER_OF_CATEGORIES = 5;
+
+    private static final int NUMBER_OF_SHOWN_HIGHSCORES = 5;
 
     private static final Integer[] TYPES_OF_QUESTIONS_BY_POINTS = {100, 200, 300, 400, 500};
 
     private final Random random = new Random();
 
-    private final List<Integer> activePlayerIds = new ArrayList<>();
+    private final List<Player> activePlayers = new ArrayList<>();
+
+    private int gameId = -1;
 
     private static final String USELESS_WORDS = "before beneath below above on in at the a an after with under toward through within" +
             "inside near out off from until to by about for since between without along across beyond except but around down up" +
             " into her his my their our your";
     private final List<String> uselessWordsList;
 
-    private final static String FILE_WITH_QUESTIONS_NAME = "JEOPARDY_QUESTIONS1.json";
+    private static final String FILE_WITH_QUESTIONS_NAME = "JEOPARDY_QUESTIONS1.json";
 
     @Autowired
     public JeopardyService() {
@@ -48,16 +52,37 @@ public class JeopardyService {
     }
 
     public List<Integer> savePlayers(String[] usernames) {
+        List<Integer> playerIds = new ArrayList<>();
         for (String username : usernames) {
-            activePlayerIds.add(playerRepo.save(new Player(username, 0)).getId());
+            Player currentPlayer = new Player(username, 0);
+            activePlayers.add(playerRepo.save(currentPlayer));
         }
+        for (Player player : activePlayers) {
+            playerIds.add(player.getId());
+        }
+        Game game = new Game(activePlayers);
+        gameRepo.save(game);
+        gameId = game.getId();
 
-        return activePlayerIds;
+        return playerIds;
+    }
+
+    public List<PlayerScoresResponse> getPlayers() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
+        List<Player> currentPlayers = gameRepo.findById(gameId).getPlayers();
+        for (Player player : currentPlayers) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
+        }
+        return players;
     }
 
     public QuestionResponse getOpeningQuestion() {
-        int randomQuestionId = getRandomIdInDatabase();
-        Question question = questionsRepo.findById(randomQuestionId);
+        Question question;
+        int randomQuestionId;
+        do {
+            randomQuestionId = getRandomIdInDatabase();
+            question = questionsRepo.findById(randomQuestionId);
+        } while (question == null);
         return new QuestionResponse(randomQuestionId, question.getActualquestion());
     }
 
@@ -67,7 +92,12 @@ public class JeopardyService {
         int numberOfCategoriesToBeGenerated = NUMBER_OF_CATEGORIES;
         outer:
         for (int i = 0; i < numberOfCategoriesToBeGenerated; i++) {
-            String category = questionsRepo.findById(getRandomIdInDatabase()).getCategory();
+            Question question = questionsRepo.findById(getRandomIdInDatabase());
+            if (question == null) {
+                numberOfCategoriesToBeGenerated++;
+                continue;
+            }
+            String category = question.getCategory();
             for (int score : TYPES_OF_QUESTIONS_BY_POINTS) {
                 if (questionsRepo.findAllByCategoryAndScore(category, score).isEmpty()) {
                     numberOfCategoriesToBeGenerated++;
@@ -95,11 +125,63 @@ public class JeopardyService {
         return allQuestionsInCategory;
     }
 
-    public List<PlayerScoresResponse> getHighScores() {
+    public List<PlayerScoresResponse> getHighScores(int gameId) {
         List<PlayerScoresResponse> players = new ArrayList<>();
-        for (int id : activePlayerIds) {
-            int playerScore = playerRepo.findById(id).getScore();
-            players.add(new PlayerScoresResponse(id, playerScore));
+        Game game = gameRepo.findById(gameId);
+        // sort players
+        Player[] topPlayerScoresInGame = sortPlayersByHighScores(game.getPlayers());
+        for (Player player : topPlayerScoresInGame) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
+        }
+        return players;
+    }
+
+    private Player[] sortPlayersByHighScores(List<Player> players) {
+        int numberOfHighScores;
+        if (players.size() > 5) {
+            numberOfHighScores = NUMBER_OF_SHOWN_HIGHSCORES;
+        }
+        else {
+            numberOfHighScores = players.size();
+        }
+        Player[] topPlayerScoresInGame = new Player[numberOfHighScores];
+
+        outer:
+        for (Player player : players) {
+            for (int i = 0; i < numberOfHighScores; i++) {
+                if (topPlayerScoresInGame[i] == null) {
+                    topPlayerScoresInGame[i] = player;
+                    continue outer;
+                }
+                if (topPlayerScoresInGame[i].getScore() < player.getScore()) {
+                    int counter = numberOfHighScores - 1;
+                    while (counter > i) {
+                        topPlayerScoresInGame[counter] = topPlayerScoresInGame[counter - 1];
+                        counter--;
+                    }
+                    topPlayerScoresInGame[i] = player;
+                    continue outer;
+                }
+            }
+        }
+        return topPlayerScoresInGame;
+    }
+
+    public List<PlayerScoresResponse> getCurrentHighScores() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
+        List<Player> currentPlayers = gameRepo.findById(gameId).getPlayers();
+        Player[] topPlayerScoresInGame = sortPlayersByHighScores(currentPlayers);
+        for (Player player : topPlayerScoresInGame) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
+        }
+        return players;
+    }
+
+    public List<PlayerScoresResponse> getAllTimeHighScores() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
+        List<Player> topPlayerScores = playerRepo.findFirst5ByOrderByScoreDesc();
+        for (Player player : topPlayerScores) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
         }
         return players;
     }
@@ -125,14 +207,21 @@ public class JeopardyService {
                 realAnswerWords.remove(uselessWord);
             }
         }
-
-        int playerMustMatchWords = realAnswerWords.size() / 2 + realAnswerWords.size() % 2;
+        int playerMustMatchWords;
+        if (realAnswerWords.size() == 2) {
+            playerMustMatchWords = realAnswerWords.size() / 2 + 1;
+        }
+        else {
+            playerMustMatchWords = realAnswerWords.size() / 2 + realAnswerWords.size() % 2;
+        }
         String[] playerAnswerWords = playerAnswer.split(" ");
         int wordMatchCounter = 0;
 
         for (String word : playerAnswerWords) {
-            if (realAnswerWords.contains(word)) {
-                wordMatchCounter++;
+            for (String correctWord : realAnswerWords) {
+                if (calculateLevenshteinDistance(word, correctWord) <= 0.33 * correctWord.length()) {
+                    wordMatchCounter++;
+                }
             }
         }
 
@@ -149,7 +238,8 @@ public class JeopardyService {
         try {
             List<Integer> possibleValues = Arrays.asList(TYPES_OF_QUESTIONS_BY_POINTS);
             List<Integer> newValues = new ArrayList<>();
-            a = (JSONArray) parser.parse(new FileReader("jeopardy-BE/" + FILE_WITH_QUESTIONS_NAME));
+            // Try adding "jeopardy-BE/" + if it does not work locally
+            a = (JSONArray) parser.parse(new FileReader(FILE_WITH_QUESTIONS_NAME));
             int counter = 0;
             for (Object o : a) {
                 JSONObject questions = (JSONObject) o;
@@ -194,4 +284,31 @@ public class JeopardyService {
             System.out.println("File could not be parsed");
         }
     }
+
+    private int calculateLevenshteinDistance(String x, String y) {
+        if (x.isEmpty()) {
+            return y.length();
+        }
+
+        if (y.isEmpty()) {
+            return x.length();
+        }
+
+        int substitution = calculateLevenshteinDistance(x.substring(1), y.substring(1))
+                + costOfSubstitution(x.charAt(0), y.charAt(0));
+        int insertion = calculateLevenshteinDistance(x, y.substring(1)) + 1;
+        int deletion = calculateLevenshteinDistance(x.substring(1), y) + 1;
+
+        return min(substitution, insertion, deletion);
+    }
+
+    private int costOfSubstitution(char a, char b) {
+        return a == b ? 0 : 1;
+    }
+
+    private int min(int... numbers) {
+        return Arrays.stream(numbers)
+                .min().orElse(Integer.MAX_VALUE);
+    }
+
 }

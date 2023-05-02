@@ -17,33 +17,51 @@ public class JeopardyController {
     }
 
     @CrossOrigin
-    @PostMapping("baseURL/saveUsers")
+    @PostMapping("saveUsers")
     public ResponseEntity<Object> savePlayers(@RequestBody String[] usernames) {
         return ResponseEntity.ok(jeopardyService.savePlayers(usernames));
     }
 
     @CrossOrigin
-    @GetMapping("baseURL/opening")
+    @GetMapping("opening")
     public ResponseEntity<Object> getOpeningQuestion() {
         return ResponseEntity.ok(jeopardyService.getOpeningQuestion());
     }
 
     @CrossOrigin
-    @GetMapping("baseURL/question/{category}")
+    @GetMapping("players")
+    public ResponseEntity<Object> getActivePlayers() {
+        return ResponseEntity.ok(jeopardyService.getPlayers());
+    }
+
+    @CrossOrigin
+    @GetMapping("question/{category}")
     public ResponseEntity<Object> getQuestions(@PathVariable String category) {
         return ResponseEntity.ok(jeopardyService.getQuestions(category));
     }
 
     @CrossOrigin
-    @GetMapping("baseURL/category")
+    @GetMapping("category")
     public ResponseEntity<Object> getCategories() {
         return ResponseEntity.ok(jeopardyService.getCategories());
     }
 
     @CrossOrigin
+    @GetMapping("highscores/{gameId}")
+    public ResponseEntity<Object> getHighscores(@PathVariable int gameId) {
+        return ResponseEntity.ok(jeopardyService.getHighScores(gameId));
+    }
+
+    @CrossOrigin
     @GetMapping("highscores")
     public ResponseEntity<Object> getHighscores() {
-        return ResponseEntity.ok(jeopardyService.getHighScores());
+        return ResponseEntity.ok(jeopardyService.getCurrentHighScores());
+    }
+
+    @CrossOrigin
+    @GetMapping("highscores/all")
+    public ResponseEntity<Object> getAllTimeHighscores() {
+        return ResponseEntity.ok(jeopardyService.getAllTimeHighScores());
     }
 
     @CrossOrigin
