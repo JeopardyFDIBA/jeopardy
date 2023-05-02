@@ -1,7 +1,7 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
+import { DOMAttributes } from 'react';
 import styles from './Input.module.scss';
 
-interface IInput {
+interface IInput extends DOMAttributes<HTMLInputElement> {
   value?: string;
   handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
   label: string;
@@ -10,7 +10,12 @@ interface IInput {
   disabled?: boolean;
 }
 function Input({
-  value, handleChange, label, placeholder, text, disabled,
+  value,
+  handleChange,
+  label,
+  placeholder,
+  text,
+  disabled,
 }: IInput) {
   return (
     <div className={styles.inputContainer}>

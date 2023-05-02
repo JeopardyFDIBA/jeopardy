@@ -9,25 +9,21 @@ function FormPage() {
     setNumber(e.currentTarget.value);
   };
   const handleStepChange = () => {
-    if (!isReady)setIsReady(true);
+    if (!isReady) setIsReady(true);
     else setIsReady(false);
   };
 
   return (
     <div>
-      {!isReady
-      && (
-      <NumberInput
-        number={number}
-        handleChange={handleNumberChange}
-        isReady={handleStepChange}
-      />
+      {!isReady && (
+        <NumberInput
+          number={number}
+          handleChange={handleNumberChange}
+          isReady={handleStepChange}
+        />
       )}
       {isReady && (
-      <PlayersForm
-        number={number}
-        onStepChange={handleStepChange}
-      />
+        <PlayersForm number={number} onStepChange={handleStepChange} />
       )}
     </div>
   );

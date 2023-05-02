@@ -1,7 +1,13 @@
-.wrapperList{
-    display:flex;
-    justify-content: space-around;
-    height: '100px';
-    margin-bottom: 30px;
-    margin-top: 40px;
+.wrapperList {
+  display: flex;
+  justify-content: space-around;
+  height: "100px";
+  margin-bottom: 30px;
+  margin-top: 40px;
+}
+.scores {
+  font-size: large;
+  color: aliceblue;
+  margin-top: 1rem;
+  border: solid #f69e08;
 }

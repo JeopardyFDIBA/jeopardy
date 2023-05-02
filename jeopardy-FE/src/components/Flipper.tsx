@@ -1,34 +1,44 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dispatch, SetStateAction } from 'react';
-import './Flipper.scss';
+import './Flipper.css';
+import { IQuestion } from '../sharedInterfaces';
 
 interface IFlipper {
-  score: string,
-  setActive: Dispatch<SetStateAction<boolean>>,
-  setSelectedQuestion:Dispatch<SetStateAction<{
-    score: string;
-    question: string;
-  } | undefined>>,
-  question: string,
-  setIsInputBlocked:Dispatch<SetStateAction<boolean>>,
+  id: number;
+  category: string;
+  score: number;
+  setActive: Dispatch<SetStateAction<boolean>>;
+  setSelectedQuestion: Dispatch<SetStateAction<IQuestion | undefined>>;
+  question: string;
+  setIsInputBlocked: Dispatch<SetStateAction<boolean>>;
 }
 function Flipper({
-  score, setActive, setSelectedQuestion, question, setIsInputBlocked,
-}:IFlipper) {
+  id,
+  score,
+  setActive,
+  setSelectedQuestion,
+  question,
+  setIsInputBlocked,
+  category,
+}: IFlipper) {
   return (
     <div
       className="flip-container"
+      data-testid={`${category}_${score}`}
       onClick={() => {
         setActive(true);
-        setSelectedQuestion({ score, question });
+        setSelectedQuestion({ score, question, id });
         setIsInputBlocked(true);
+        localStorage.setItem('category', category);
       }}
     >
       <div className="flipper">
         <div className="front">
-          <p>{score}</p>
+          <p>
+            {score}
+            $
+          </p>
         </div>
         <div className="back">
           <p className="backText">HINT?</p>
