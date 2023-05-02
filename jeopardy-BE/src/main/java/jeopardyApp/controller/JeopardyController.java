@@ -59,6 +59,12 @@ public class JeopardyController {
     }
 
     @CrossOrigin
+    @GetMapping("highscores/all")
+    public ResponseEntity<Object> getAllTimeHighscores() {
+        return ResponseEntity.ok(jeopardyService.getAllTimeHighScores());
+    }
+
+    @CrossOrigin
     @PostMapping("updatescore")
     public ResponseEntity<Object> updateScores(@RequestBody UpdateScoreRequest updateScoreRequest) {
         jeopardyService.updateScores(updateScoreRequest.getId(), updateScoreRequest.getScore());

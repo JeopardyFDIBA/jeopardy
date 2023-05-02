@@ -37,6 +37,8 @@ public class JeopardyService {
 
     private final List<Player> activePlayers = new ArrayList<>();
 
+    private int gameId = -1;
+
     private static final String USELESS_WORDS = "before beneath below above on in at the a an after with under toward through within" +
             "inside near out off from until to by about for since between without along across beyond except but around down up" +
             " into her his my their our your";
@@ -58,21 +60,29 @@ public class JeopardyService {
         for (Player player : activePlayers) {
             playerIds.add(player.getId());
         }
-        gameRepo.save(new Game(activePlayers));
+        Game game = new Game(activePlayers);
+        gameRepo.save(game);
+        gameId = game.getId();
+
         return playerIds;
     }
 
     public List<PlayerScoresResponse> getPlayers() {
         List<PlayerScoresResponse> players = new ArrayList<>();
-        for (Player player : activePlayers) {
+        List<Player> currentPlayers = gameRepo.findById(gameId).getPlayers();
+        for (Player player : currentPlayers) {
             players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
         }
         return players;
     }
 
     public QuestionResponse getOpeningQuestion() {
-        int randomQuestionId = getRandomIdInDatabase();
-        Question question = questionsRepo.findById(randomQuestionId);
+        Question question;
+        int randomQuestionId;
+        do {
+            randomQuestionId = getRandomIdInDatabase();
+            question = questionsRepo.findById(randomQuestionId);
+        } while (question == null);
         return new QuestionResponse(randomQuestionId, question.getActualquestion());
     }
 
@@ -154,8 +164,18 @@ public class JeopardyService {
 
     public List<PlayerScoresResponse> getCurrentHighScores() {
         List<PlayerScoresResponse> players = new ArrayList<>();
-        Player[] topPlayerScoresInGame = sortPlayersByHighScores(activePlayers);
+        List<Player> currentPlayers = gameRepo.findById(gameId).getPlayers();
+        Player[] topPlayerScoresInGame = sortPlayersByHighScores(currentPlayers);
         for (Player player : topPlayerScoresInGame) {
+            players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
+        }
+        return players;
+    }
+
+    public List<PlayerScoresResponse> getAllTimeHighScores() {
+        List<PlayerScoresResponse> players = new ArrayList<>();
+        List<Player> topPlayerScores = playerRepo.findFirst5ByOrderByScoreDesc();
+        for (Player player : topPlayerScores) {
             players.add(new PlayerScoresResponse(player.getId(), player.getScore(), player.getName()));
         }
         return players;
@@ -285,4 +305,5 @@ public class JeopardyService {
         return Arrays.stream(numbers)
                 .min().orElse(Integer.MAX_VALUE);
     }
+
 }
