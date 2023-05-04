@@ -1,21 +1,15 @@
-* {
-  box-sizing: border-box;
-  margin: 0px;
-  padding: 0px;
-  font-weight: bold;
-  text-align: center;
-}
+$background-color: black;
 
-.flip-container {
+.flipContainer {
   perspective: 1000px;
 }
 
 /* flip the pane when hovered */
-.flip-container:hover .flipper {
+.flipContainer:hover .flipper {
   transform: rotateY(180deg);
 }
 
-.flip-container,
+.flipContainer,
 .front,
 .back {
   width: 230px;
