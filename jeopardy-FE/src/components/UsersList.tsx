@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 import Avatar from 'react-avatar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import styles from './UsersList.module.scss';
 import colors from '../helpers/colors';
 import { maxInitials } from '../helpers/helpConstants';
 import { IPLayer } from '../sharedInterfaces';
+import apiInstance from '../services/axiosConfig';
 
 function UsersList({ reload }: { reload: boolean }) {
   const [players, setPlayers] = useState<IPLayer[]>([]);
@@ -14,8 +14,8 @@ function UsersList({ reload }: { reload: boolean }) {
     avatarColors.push(colors[i]);
   });
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/players')
+    apiInstance
+      .get('/players')
       .then((response) => setPlayers(response.data));
   }, [reload]);
 

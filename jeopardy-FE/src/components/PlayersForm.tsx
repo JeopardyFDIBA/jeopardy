@@ -1,9 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import React, { FormEvent, useState } from 'react';
-import axios from 'axios';
 import { OptionsButtonItem } from './OptionsItem';
 import PlayersInput from './PlayersInput';
 import styles from './PlayersForm.module.scss';
+import apiInstance from '../services/axiosConfig';
 
 interface IPlayersForm {
   number: string;
@@ -26,8 +26,8 @@ function PlayersForm({ number, onStepChange }: IPlayersForm) {
     const playersArr = Object.values(allPlayers).map(
       (player: any) => player.name,
     );
-    axios
-      .post('http://localhost:8080/saveUsers', JSON.stringify(playersArr))
+    apiInstance
+      .post('/saveUsers', JSON.stringify(playersArr))
       .then(() => {
         window.location.assign('game');
       });
