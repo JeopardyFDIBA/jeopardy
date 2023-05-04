@@ -11,14 +11,14 @@ import {
 } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import Avatar from 'react-avatar';
-import colors from '../helpers/colors';
+import colors from '../../helpers/colors';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './Main.module.scss';
-import Question from './Question';
-import QuestionsMatrix from './QuestionsMatrix';
-import { maxTriesOnOpeningQuestion } from '../helpers/helpConstants';
-import { IPLayer, IQuestion } from '../sharedInterfaces';
-import apiInstance from '../services/axiosConfig';
+import Question from '../Question/Question';
+import QuestionsMatrix from '../QuestionsMatrix/QuestionsMatrix';
+import { maxTriesOnOpeningQuestion } from '../../helpers/helpConstants';
+import { IPLayer, IQuestion } from '../../sharedInterfaces';
+import apiInstance from '../../services/axiosConfig';
 
 export default function Main({
   reload,

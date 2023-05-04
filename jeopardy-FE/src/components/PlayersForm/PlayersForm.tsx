@@ -1,9 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import React, { FormEvent, useState } from 'react';
-import { OptionsButtonItem } from './OptionsItem';
-import PlayersInput from './PlayersInput';
+import { OptionsButtonItem } from '../OptionsItem/OptionsItem';
+import PlayersInput from '../PlayersInput/PlayersInput';
 import styles from './PlayersForm.module.scss';
-import apiInstance from '../services/axiosConfig';
+import apiInstance from '../../services/axiosConfig';
 
 interface IPlayersForm {
   number: string;

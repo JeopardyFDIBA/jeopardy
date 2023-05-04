@@ -2,10 +2,10 @@
 import Avatar from 'react-avatar';
 import { useEffect, useState } from 'react';
 import styles from './UsersList.module.scss';
-import colors from '../helpers/colors';
-import { maxInitials } from '../helpers/helpConstants';
-import { IPLayer } from '../sharedInterfaces';
-import apiInstance from '../services/axiosConfig';
+import colors from '../../helpers/colors';
+import { maxInitials } from '../../helpers/helpConstants';
+import { IPLayer } from '../../sharedInterfaces';
+import apiInstance from '../../services/axiosConfig';
 
 function UsersList({ reload }: { reload: boolean }) {
   const [players, setPlayers] = useState<IPLayer[]>([]);
