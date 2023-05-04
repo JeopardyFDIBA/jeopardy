@@ -1,11 +1,5 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-alert */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-nested-ternary */
 import {
   Dispatch, SetStateAction, useEffect, useRef, useState,
 } from 'react';
@@ -27,7 +21,7 @@ export default function Main({
   reload: boolean;
   setReload: Dispatch<SetStateAction<boolean>>;
 }) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState([]);
   const [isActiveQuestion, setIsActiveQuestion] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<IQuestion>();
@@ -41,16 +35,6 @@ export default function Main({
   );
   const [players, setPlayers] = useState<IPLayer[]>([]);
   const [activePlayer, setActivePlayer] = useState<IPLayer>();
-  const timerRef = useRef<any | null>(null);
-
-  useEffect(() => {
-    timerRef.current! = setInterval(() => {
-      alert('Time is up!');
-    }, 20 * 30 * 1000);
-
-    // clear the timer when the component unmounts
-    return () => clearInterval(timerRef.current!);
-  }, []);
 
   useEffect(() => {
     apiInstance
@@ -62,7 +46,7 @@ export default function Main({
   }, []);
 
   useEffect(() => {
-    const referance: any = ref.current;
+    const referance: HTMLDivElement | null = ref.current;
     if (referance) referance.focus();
     apiInstance.get('/opening').then((response) => {
       setOpeningQuestion({
@@ -140,22 +124,21 @@ export default function Main({
         tabIndex={-1}
         onKeyDown={handleKeyDown as unknown as React.KeyboardEventHandler<HTMLDivElement>}
       >
-        {hasGameStarted ? (
-          !isActiveQuestion ? (
-            <QuestionsMatrix
-              categories={categories}
-              setActive={setIsActiveQuestion}
-              setIsInputBlocked={setIsInputBlocked}
-              setSelectedQuestion={setSelectedQuestion}
-            />
-          ) : (
-            <Question
-              {...sharedQuestionProps}
-              questionObject={selectedQuestion}
-            />
-          )
+        {isActiveQuestion ? (
+          <Question
+            {...sharedQuestionProps}
+            questionObject={selectedQuestion}
+          />
         ) : (
           <Question {...sharedQuestionProps} questionObject={openingQuestion} />
+        )}
+        {!isActiveQuestion && (
+        <QuestionsMatrix
+          categories={categories}
+          setActive={setIsActiveQuestion}
+          setIsInputBlocked={setIsInputBlocked}
+          setSelectedQuestion={setSelectedQuestion}
+        />
         )}
       </div>
     </div>

@@ -1,4 +1,4 @@
-/* eslint-disable react/no-array-index-key */
+import { v4 as uuidv4 } from 'uuid';
 import Column from '../Column/Column';
 import styles from './QuestionsMatrix.module.scss';
 import IQuestionsMatrix from './IQuestionsMatrix';
@@ -11,9 +11,9 @@ export default function Matrix({
 }: IQuestionsMatrix) {
   return (
     <div className={styles.questions}>
-      {categories.map((category: string, index: number) => (
+      {categories.map((category: string) => (
         <Column
-          key={index}
+          key={uuidv4()}
           category={category}
           setActive={setActive}
           setSelectedQuestion={setSelectedQuestion}

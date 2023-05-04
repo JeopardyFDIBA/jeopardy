@@ -1,4 +1,4 @@
-/* eslint-disable react/no-array-index-key */
+import { v4 as uuidv4 } from 'uuid';
 import Avatar from 'react-avatar';
 import { useEffect, useState } from 'react';
 import styles from './UsersList.module.scss';
@@ -22,9 +22,9 @@ function UsersList({ reload }: { reload: boolean }) {
   return (
     <div className={styles.wrapperList}>
       {players.map((user: IPLayer, index: number) => (
-        <div key={index}>
+        <div key={uuidv4()}>
           <Avatar
-            key={index}
+            key={uuidv4()}
             round
             name={user.name}
             maxInitials={maxInitials}

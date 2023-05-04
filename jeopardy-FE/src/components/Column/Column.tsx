@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Flipper from '../Flipper/Flipper';
 import styles from './Column.module.scss';
 import IColumn from './IColumn';

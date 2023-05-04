@@ -1,5 +1,5 @@
-/* eslint-disable react/no-array-index-key */
-import React, { FormEvent, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { FormEvent, useState } from 'react';
 import { OptionsButtonItem } from '../OptionsItem/OptionsItem';
 import PlayersInput from '../PlayersInput/PlayersInput';
 import styles from './PlayersForm.module.scss';
@@ -15,7 +15,7 @@ function PlayersForm({ number, onStepChange }: IPlayersForm) {
 
   const players = [...Array(+number)].map((e, i) => (
     <PlayersInput
-      key={i}
+      key={uuidv4()}
       playerId={i}
       allPlayers={allPlayers}
       setAllPlayers={setAllPlayers}
