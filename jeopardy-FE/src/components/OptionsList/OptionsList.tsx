@@ -1,4 +1,4 @@
-import { OptionsLinkItem } from './OptionsItem';
+import { OptionsLinkItem } from '../OptionsItem/OptionsItem';
 import styles from './OptionsList.module.scss';
 
 function OptionsList() {

@@ -1,14 +1,6 @@
-import { DOMAttributes } from 'react';
+import IInput from './IInput';
 import styles from './Input.module.scss';
 
-interface IInput extends DOMAttributes<HTMLInputElement> {
-  value?: string;
-  handleChange: (e: React.FormEvent<HTMLInputElement>) => void;
-  label: string;
-  placeholder: string;
-  text: string;
-  disabled?: boolean;
-}
 function Input({
   value,
   handleChange,

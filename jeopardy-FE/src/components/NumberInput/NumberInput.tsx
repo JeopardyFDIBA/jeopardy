@@ -1,6 +1,6 @@
-import { OptionsButtonItem } from './OptionsItem';
+import { OptionsButtonItem } from '../OptionsItem/OptionsItem';
 import styles from './NumberInput.module.scss';
-import Input from './Input';
+import Input from '../Input/Input';
 
 interface INumberInput {
   number: string;

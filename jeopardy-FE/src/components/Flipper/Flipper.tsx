@@ -1,18 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { Dispatch, SetStateAction } from 'react';
-import './Flipper.css';
-import { IQuestion } from '../sharedInterfaces';
+import './Flipper.module.scss';
+import IFlipper from './IFlipper';
 
-interface IFlipper {
-  id: number;
-  category: string;
-  score: number;
-  setActive: Dispatch<SetStateAction<boolean>>;
-  setSelectedQuestion: Dispatch<SetStateAction<IQuestion | undefined>>;
-  question: string;
-  setIsInputBlocked: Dispatch<SetStateAction<boolean>>;
-}
 function Flipper({
   id,
   score,

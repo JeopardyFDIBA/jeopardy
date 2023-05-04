@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { useState } from 'react';
-import Input from './Input';
+import Input from '../Input/Input';
 
 interface IPlayersInput {
   playerId: number;

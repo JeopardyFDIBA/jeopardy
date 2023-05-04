@@ -1,15 +1,7 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import Input from './Input';
+import { useState } from 'react';
+import Input from '../Input/Input';
 import styles from './Question.module.scss';
-import { IQuestion } from '../sharedInterfaces';
-
-interface IQuestionComponent {
-  setActive: Dispatch<SetStateAction<boolean>>;
-  questionObject: IQuestion | undefined;
-  isInputBlocked: boolean;
-  setBuzzer: Dispatch<SetStateAction<string>>;
-  setAnswer: Dispatch<SetStateAction<string>>;
-}
+import IQuestionComponent from './IQuestionComponent';
 
 function Question({
   setActive,

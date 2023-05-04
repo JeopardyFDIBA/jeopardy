@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
-import Main from '../components/Main';
-import UsersList from '../components/UsersList';
+import Main from '../components/Main/Main';
+import UsersList from '../components/UsersList/UsersList';
 
 function GamePage() {
   const [reload, setReload] = useState(false);

@@ -1,5 +1,5 @@
 import styles from './HomePage.module.scss';
-import OptionsList from '../components/OptionsList';
+import OptionsList from '../components/OptionsList/OptionsList';
 
 function HomePage() {
   return (
