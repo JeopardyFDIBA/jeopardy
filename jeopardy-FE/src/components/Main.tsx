@@ -11,7 +11,6 @@ import {
 } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import Avatar from 'react-avatar';
-import axios from 'axios';
 import colors from '../helpers/colors';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './Main.module.scss';
@@ -19,9 +18,7 @@ import Question from './Question';
 import QuestionsMatrix from './QuestionsMatrix';
 import { maxTriesOnOpeningQuestion } from '../helpers/helpConstants';
 import { IPLayer, IQuestion } from '../sharedInterfaces';
-
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+import apiInstance from '../services/axiosConfig';
 
 export default function Main({
   reload,
@@ -56,18 +53,18 @@ export default function Main({
   }, []);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/category')
+    apiInstance
+      .get('/category')
       .then((response) => setCategories(response.data));
-    axios
-      .get('http://localhost:8080/players')
+    apiInstance
+      .get('/players')
       .then((response) => setPlayers(response.data));
   }, []);
 
   useEffect(() => {
     const referance: any = ref.current;
     if (referance) referance.focus();
-    axios.get('http://localhost:8080/opening').then((response) => {
+    apiInstance.get('/opening').then((response) => {
       setOpeningQuestion({
         score: response.data.score,
         question: response.data.actualQuestion,
@@ -77,8 +74,8 @@ export default function Main({
   }, [shouldTryAgain]);
 
   const updateScore = () => {
-    axios
-      .post('http://localhost:8080/updatescore', {
+    apiInstance
+      .post('/updatescore', {
         id: activePlayer?.id,
         score: selectedQuestion?.score,
       })
@@ -96,8 +93,8 @@ export default function Main({
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
-      axios
-        .post('http://localhost:8080/checkAnswer', {
+      apiInstance
+        .post('/checkAnswer', {
           id: !hasGameStarted ? openingQuestion?.id : selectedQuestion?.id,
           answer,
         })
