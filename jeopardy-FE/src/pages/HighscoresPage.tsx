@@ -1,4 +1,4 @@
-/* eslint-disable react/no-array-index-key */
+import { v4 as uuidv4 } from 'uuid';
 import styles from './HighscoresPage.module.scss';
 
 function Highscores() {
@@ -25,7 +25,7 @@ function Highscores() {
         </thead>
         <tbody>
           {scores.map((player, index) => (
-            <tr key={index}>
+            <tr key={uuidv4()}>
               <td>{index + 1}</td>
               <td>{player.name}</td>
               <td>{player.score}</td>
