@@ -1,4 +1,4 @@
-const colors = [
+const avatarColors = [
   'lightblue',
   'lightgreen',
   'yellow',
@@ -10,4 +10,4 @@ const colors = [
   'pink',
 ];
 
-export default colors;
+export default avatarColors;

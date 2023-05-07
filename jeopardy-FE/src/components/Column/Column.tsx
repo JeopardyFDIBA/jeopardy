@@ -37,7 +37,7 @@ function Column({
   ));
   return (
     <div style={{ display: 'block', maxWidth: '230px' }}>
-      <div className={styles.header}>{category}</div>
+      <div className={styles.columnHeader}>{category}</div>
       <div>{column}</div>
     </div>
   );

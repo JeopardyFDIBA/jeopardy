@@ -4,7 +4,6 @@ $background-color: black;
   perspective: 1000px;
 }
 
-/* flip the pane when hovered */
 .flipContainer:hover .flipper {
   transform: rotateY(180deg);
 }
@@ -17,14 +16,12 @@ $background-color: black;
   background-color: black;
 }
 
-/* flip speed goes here */
 .flipper {
   transition: 0.6s;
   transform-style: preserve-3d;
   position: relative;
 }
 
-/* hide back of pane during swap */
 .front,
 .back {
   backface-visibility: hidden;
@@ -41,17 +38,14 @@ $background-color: black;
   font-size: x-large;
 }
 
-/* front pane, placed above back */
 .front {
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
-  /* for firefox 31 */
   transform: rotateY(0deg);
 }
 
-/* back, initially hidden pane */
 .back {
   display: flex;
   justify-content: center;
@@ -59,7 +53,4 @@ $background-color: black;
   transform: rotateY(180deg);
   background-color: blue;
   padding: 0px;
-}
-.block {
-  pointer-events: none;
 }
