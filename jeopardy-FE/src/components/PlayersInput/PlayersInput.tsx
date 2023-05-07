@@ -1,10 +1,6 @@
 import { useRef, useEffect } from 'react';
 import Input from '../Input/Input';
-
-interface IPlayersInput {
-  playerId: number;
-  setInputRef: (ref: HTMLInputElement | null, index: number) => void;
-}
+import IPlayersInput from './IPlayersInput';
 
 function PlayersInput({
   playerId, setInputRef,

@@ -14,11 +14,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["vitest"]
   },
   "include": [
     "./vite.config.ts",
     "./.eslintrc.cjs",
+    "@testing-library/jest-dom",
+    "./jest.config.cjs",
     "./src"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]

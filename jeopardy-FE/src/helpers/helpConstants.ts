@@ -1,3 +1,2 @@
 export const maxInitials = 3;
-
-export const maxTriesOnOpeningQuestion = 20;
+export const defaultColor = '#0c0734';

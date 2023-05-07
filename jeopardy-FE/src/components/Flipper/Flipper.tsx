@@ -11,7 +11,6 @@ function Flipper({
   category,
 }: IFlipper) {
   return (
-    // eslint-disable-next-line  jsx-a11y/no-static-element-interactions
     <div
       className={styles.flipContainer}
       data-testid={`${category}_${score}`}
@@ -20,7 +19,6 @@ function Flipper({
         setActive(true);
         setSelectedQuestion({ score, question, id });
         setIsInputBlocked(true);
-        localStorage.setItem('category', category);
       }}
     >
       <div className={styles.flipper}>

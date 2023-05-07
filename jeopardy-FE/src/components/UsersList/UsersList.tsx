@@ -3,22 +3,25 @@ import Avatar from 'react-avatar';
 import { useEffect, useState } from 'react';
 import styles from './UsersList.module.scss';
 import { maxInitials } from '../../helpers/helpConstants';
-import { IPLayer } from '../../sharedInterfaces';
-import apiInstance from '../../services/axiosConfig';
+import { IPlayer } from '../../sharedInterfaces';
 import getAvatarColors from '../../helpers/getAvatarColors';
+import { getPlayers } from '../../services';
 
 function UsersList({ reload }: { reload: boolean }) {
-  const [players, setPlayers] = useState<IPLayer[]>([]);
+  const [players, setPlayers] = useState<IPlayer[]>([]);
   const avatarColors = getAvatarColors(players);
+
   useEffect(() => {
-    apiInstance
-      .get('/players')
-      .then((response) => setPlayers(response.data));
+    const fetchPlayers = async () => {
+      const response = await getPlayers();
+      setPlayers(response);
+    };
+    fetchPlayers();
   }, [reload]);
 
   return (
     <div className={styles.wrapperList}>
-      {players.map((user: IPLayer, index: number) => (
+      {players.map((user: IPlayer, index: number) => (
         <div key={uuidv4()}>
           <Avatar
             key={uuidv4()}

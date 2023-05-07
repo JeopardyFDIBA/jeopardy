@@ -1,22 +1,50 @@
+import { useState } from 'react';
 import Input from '../Input/Input';
 import styles from './Question.module.scss';
 import IQuestionComponent from './IQuestionComponent';
+import { checkAnswer, updateScore } from '../../services';
+import { defaultColor } from '../../helpers/helpConstants';
 
 function Question({
   setActive,
   questionObject,
   isInputBlocked,
   setBuzzer,
-  setAnswer,
+  activePlayer,
+  setHasGameStarted,
+  setReload,
+  setShouldTryAgain,
+  shouldTryAgain,
+  reload,
 }: IQuestionComponent) {
+  const [answer, setAnswer] = useState('');
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      checkAnswer(questionObject?.id, answer)
+        .then((response) => {
+          if (response.correct) {
+            if (questionObject?.score === 0) {
+              setHasGameStarted?.(true);
+            } else {
+              updateScore(activePlayer?.id, questionObject?.score);
+              setReload?.(!reload);
+            }
+          } else {
+            setShouldTryAgain?.(!shouldTryAgain);
+            console.log('error');
+          }
+        });
+    }
+  };
   return (
     <form
       className={styles.questionFocus}
       onSubmit={(e) => {
         e.preventDefault();
         setActive(false);
-        setBuzzer('#0c0734');
+        setBuzzer(defaultColor);
       }}
+      onKeyDown={handleKeyDown as unknown as React.KeyboardEventHandler<HTMLFormElement>}
     >
       <Input
         setChange={setAnswer}

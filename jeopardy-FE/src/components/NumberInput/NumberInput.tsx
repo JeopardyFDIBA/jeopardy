@@ -11,6 +11,7 @@ function NumberInput({ handleStepChange, setNumber }: INumberInput) {
         placeholder="Enter number"
         text="Enter the number of players"
         setChange={setNumber}
+        shouldBeNumber
       />
       <OptionsButtonItem title="Next" onClick={handleStepChange} />
     </div>
