@@ -1,14 +1,20 @@
+import { useState } from 'react';
 import IInput from './IInput';
 import styles from './Input.module.scss';
 
 function Input({
-  value,
-  handleChange,
   label,
   placeholder,
   text,
-  disabled,
+  disabled = false,
+  setChange,
+  inputRef,
 }: IInput) {
+  const [value, setValue] = useState('');
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    setValue(e.currentTarget.value);
+    setChange?.(`${e.currentTarget.value}`);
+  };
   return (
     <div className={styles.inputContainer}>
       <label htmlFor={label}>{text}</label>
@@ -21,13 +27,9 @@ function Input({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
+        ref={inputRef}
       />
     </div>
   );
 }
-
-Input.defaultProps = {
-  disabled: false,
-  value: '',
-};
 export default Input;

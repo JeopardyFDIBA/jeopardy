@@ -1,30 +1,24 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
-import { useState } from 'react';
+import { useRef, useEffect } from 'react';
 import Input from '../Input/Input';
 
 interface IPlayersInput {
   playerId: number;
-  allPlayers: object;
-  setAllPlayers: React.Dispatch<React.SetStateAction<object>>;
+  setInputRef: (ref: HTMLInputElement | null, index: number) => void;
 }
 
-function PlayersInput({ playerId, allPlayers, setAllPlayers }: IPlayersInput) {
-  const [players, setPlayers] = useState('');
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setPlayers(e.currentTarget.value);
-    setAllPlayers({
-      ...allPlayers,
-      [`player${playerId}`]: {
-        name: e.currentTarget.value,
-        score: 100,
-      },
-    });
-  };
+function PlayersInput({
+  playerId, setInputRef,
+}
+: IPlayersInput) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInputRef(inputRef.current, playerId);
+  }, [inputRef, playerId, setInputRef]);
+
   return (
     <Input
-      value={players}
-      handleChange={handleChange}
+      inputRef={inputRef}
       label="number"
       placeholder="Enter name"
       text={`Player ${playerId + 1}: `}
