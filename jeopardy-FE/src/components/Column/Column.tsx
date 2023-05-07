@@ -1,14 +1,9 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import Flipper from '../Flipper/Flipper';
 import styles from './Column.module.scss';
 import IColumn from './IColumn';
-import apiInstance from '../../services/axiosConfig';
-
-interface IProps {
-  id: number;
-  actualQuestion: string;
-  score: number;
-}
+import { getQuestionsByCategory } from '../../services';
+import { IQuestion } from '../../sharedInterfaces';
 
 function Column({
   category,
@@ -16,20 +11,21 @@ function Column({
   setSelectedQuestion,
   setIsInputBlocked,
 }: IColumn) {
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
+
   useEffect(() => {
-    apiInstance
-      .get(`/question/${category}`)
-      .then((response) => setQuestions(response.data));
+    getQuestionsByCategory(category)
+      .then((response) => setQuestions(response))
+      .catch((error) => console.error(error));
   }, [category]);
   const column: JSX.Element[] = [];
-  questions.map((elem: IProps) => column.push(
+  questions.map((question: IQuestion) => column.push(
     <Flipper
       category={category}
-      key={elem.id}
-      id={elem.id}
-      score={elem.score}
-      question={elem.actualQuestion}
+      key={question.id}
+      id={question.id}
+      score={question.score}
+      question={question.question}
       setActive={setActive}
       setSelectedQuestion={setSelectedQuestion}
       setIsInputBlocked={setIsInputBlocked}
@@ -42,5 +38,8 @@ function Column({
     </div>
   );
 }
+function propsAreEqual() {
+  return true;
+}
 
-export default Column;
+export default memo(Column, propsAreEqual);

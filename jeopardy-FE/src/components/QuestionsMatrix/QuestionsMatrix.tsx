@@ -4,10 +4,10 @@ import styles from './QuestionsMatrix.module.scss';
 import IQuestionsMatrix from './IQuestionsMatrix';
 
 export default function Matrix({
-  categories,
   setActive,
   setSelectedQuestion,
   setIsInputBlocked,
+  categories,
 }: IQuestionsMatrix) {
   return (
     <div className={styles.questions}>

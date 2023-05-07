@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage';
-import GamePage from './pages/GamePage';
-import FormPage from './pages/FormPage';
-import Playground from './playground/Playground';
-import HighscoresPage from './pages/HighscoresPage';
+import GamePage from './pages/GamePage/GamePage';
+import FormPage from './pages/FormPage/FormPage';
+import Playground from './pages/Playground/Playground';
+import HighscoresPage from './pages/HighscoresPage/HighscoresPage';
 
 function App() {
   return (

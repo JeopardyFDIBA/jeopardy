@@ -3,8 +3,8 @@ import { FormEvent, useRef } from 'react';
 import { OptionsButtonItem } from '../OptionsItem/OptionsItem';
 import PlayersInput from '../PlayersInput/PlayersInput';
 import styles from './PlayersForm.module.scss';
-import apiInstance from '../../services/axiosConfig';
 import IPlayersForm from './IPlayersForm';
+import { savePlayers } from '../../services';
 
 function PlayersForm({ number, onStepChange }: IPlayersForm) {
   const inputRefs = useRef<HTMLInputElement[]>([]);
@@ -29,11 +29,11 @@ function PlayersForm({ number, onStepChange }: IPlayersForm) {
       allPlayers.push(value);
     });
     await Promise.all(inputPromises).then(() => {
-      apiInstance
-        .post('/saveUsers', JSON.stringify(allPlayers))
-        .then(() => {
-          window.location.assign('game');
-        });
+      try {
+        savePlayers(allPlayers).then(() => window.location.assign('game'));
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 

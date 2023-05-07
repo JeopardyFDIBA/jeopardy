@@ -1,1 +1,1 @@
-export interface IPLayer {score: number, name: string, id: number }
+export interface IPlayer {score: number, name: string, id: number }

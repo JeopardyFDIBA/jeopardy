@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import NumberInput from '../components/NumberInput/NumberInput';
-import PlayersForm from '../components/PlayersForm/PlayersForm';
+import NumberInput from '../../components/NumberInput/NumberInput';
+import PlayersForm from '../../components/PlayersForm/PlayersForm';
 
 function FormPage() {
   const [number, setNumber] = useState('1');

@@ -1,6 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/jsx-props-no-spreading */
 import {
   Dispatch, SetStateAction, useEffect, useRef, useState,
 } from 'react';
@@ -10,12 +7,11 @@ import avatarColors from '../../helpers/avatarColors';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './Main.module.scss';
 import QuestionsMatrix from '../QuestionsMatrix/QuestionsMatrix';
-import { maxTriesOnOpeningQuestion } from '../../helpers/helpConstants';
-import { IPLayer, IQuestion } from '../../sharedInterfaces';
-import apiInstance from '../../services/axiosConfig';
+import { IPlayer, IQuestion } from '../../sharedInterfaces';
 import Question from '../Question/Question';
+import { getCategories, getOpening, getPlayers } from '../../services';
 
-export default function Main({
+export function Main({
   reload,
   setReload,
 }: {
@@ -23,52 +19,35 @@ export default function Main({
   setReload: Dispatch<SetStateAction<boolean>>;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [isActiveQuestion, setIsActiveQuestion] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<IQuestion>();
   const [buzzer, setBuzzer] = useState('');
   const [isInputBlocked, setIsInputBlocked] = useState(true);
   const [hasGameStarted, setHasGameStarted] = useState(false);
   const [openingQuestion, setOpeningQuestion] = useState<IQuestion>();
-  const [answer, setAnswer] = useState('');
-  const [shouldTryAgain, setShouldTryAgain] = useState(
-    maxTriesOnOpeningQuestion,
-  );
-  const [players, setPlayers] = useState<IPLayer[]>([]);
-  const [activePlayer, setActivePlayer] = useState<IPLayer>();
+  const [shouldTryAgain, setShouldTryAgain] = useState(false);
+  const [players, setPlayers] = useState<IPlayer[]>([]);
+  const [activePlayer, setActivePlayer] = useState<IPlayer>();
 
   useEffect(() => {
-    apiInstance
-      .get('/category')
-      .then((response) => setCategories(response.data));
-    apiInstance
-      .get('/players')
-      .then((response) => setPlayers(response.data));
+    const fetchPlayers = async () => {
+      setPlayers(await getPlayers());
+    };
+    const fetchCategories = async () => {
+      setCategories(await getCategories());
+    };
+    fetchCategories();
+    fetchPlayers();
   }, []);
 
   useEffect(() => {
     const referance: HTMLDivElement | null = ref.current;
     if (referance) referance.focus();
-    apiInstance.get('/opening').then((response) => {
-      setOpeningQuestion({
-        score: response.data.score,
-        question: response.data.actualQuestion,
-        id: response.data.id,
-      });
+    getOpening().then((opening) => {
+      setOpeningQuestion(opening);
     });
   }, [shouldTryAgain]);
-
-  const updateScore = () => {
-    apiInstance
-      .post('/updatescore', {
-        id: activePlayer?.id,
-        score: selectedQuestion?.score,
-      })
-      .then(() => {
-        setReload(!reload);
-        localStorage.setItem('containerToBlock', `${localStorage.getItem('category')}_${selectedQuestion?.score}`);
-      });
-  };
 
   const notify = (nickname: string, color?: string) => toast.success('Clicked first', {
     toastId: nickname,
@@ -77,28 +56,12 @@ export default function Main({
   });
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      apiInstance
-        .post('/checkAnswer', {
-          id: !hasGameStarted ? openingQuestion?.id : selectedQuestion?.id,
-          answer,
-        })
-        .then((response) => {
-          if (response.data.correct && !hasGameStarted) {
-            setHasGameStarted(true);
-          } else if (response.data.correct && hasGameStarted) {
-            updateScore();
-          } else {
-            setIsInputBlocked(true);
-            setShouldTryAgain(shouldTryAgain - 1);
-          }
-        });
-    } else if (+event.key >= 1 && +event.key <= 9) {
+    if (+event.key >= 1 && +event.key <= 9) {
       toast.clearWaitingQueue();
       const playerIndex = +event.key - 1;
       const { name } = players[playerIndex];
       if (!toast.isActive(name)) {
-        if ((+event.key >= 1 || +event.key <= 9) && !isInputBlocked) {
+        if ((+event.key >= 1 || +event.key <= 9)) {
           notify(name, avatarColors[playerIndex]);
           setBuzzer(avatarColors[playerIndex]);
           setActivePlayer(players[playerIndex]);
@@ -109,35 +72,46 @@ export default function Main({
   };
 
   const sharedQuestionProps = {
+    activePlayer,
     isInputBlocked,
     setActive: setIsActiveQuestion,
     setBuzzer,
-    setAnswer,
+    reload,
+    setReload,
   };
 
   return (
     <div className={styles.wrapper}>
       <ToastContainer limit={1} />
       <div className={styles.questionsField} style={{ backgroundColor: buzzer || '#0c0734' }} ref={ref} tabIndex={-1} onKeyDown={handleKeyDown as unknown as React.KeyboardEventHandler<HTMLDivElement>}>
-        {hasGameStarted ? (!isActiveQuestion ? (
-          <QuestionsMatrix
-            categories={categories}
-            setActive={setIsActiveQuestion}
-            setIsInputBlocked={setIsInputBlocked}
-            setSelectedQuestion={setSelectedQuestion}
-          />
-        ) : (
-          <Question
-            {...sharedQuestionProps}
-            questionObject={selectedQuestion}
-          />
-        )) : (
-          <Question
-            {...sharedQuestionProps}
-            questionObject={openingQuestion}
-          />
-        )}
+
+        {
+         // eslint-disable-next-line no-nested-ternary
+         hasGameStarted ? (!isActiveQuestion ? (
+           <QuestionsMatrix
+             categories={categories}
+             setActive={setIsActiveQuestion}
+             setIsInputBlocked={setIsInputBlocked}
+             setSelectedQuestion={setSelectedQuestion}
+           />
+         ) : (
+           <Question
+             {...sharedQuestionProps}
+             questionObject={selectedQuestion}
+           />
+         )) : (
+           <Question
+             {...sharedQuestionProps}
+             questionObject={openingQuestion}
+             setHasGameStarted={setHasGameStarted}
+             setShouldTryAgain={setShouldTryAgain}
+             shouldTryAgain={shouldTryAgain}
+           />
+         )
+}
       </div>
     </div>
   );
 }
+
+export default Main;
