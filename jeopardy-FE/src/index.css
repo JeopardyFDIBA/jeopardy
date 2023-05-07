@@ -1,3 +1,10 @@
+* {
+    box-sizing: border-box;
+    margin:0px;
+    padding:0px;
+    font-weight:bold;
+    text-align:center;
+}
 #root{
     position: absolute;
     display: flex;

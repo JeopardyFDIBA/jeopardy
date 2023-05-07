@@ -1,6 +1,4 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import './Flipper.module.scss';
+import styles from './Flipper.module.scss';
 import IFlipper from './IFlipper';
 
 function Flipper({
@@ -13,9 +11,11 @@ function Flipper({
   category,
 }: IFlipper) {
   return (
+    // eslint-disable-next-line  jsx-a11y/no-static-element-interactions
     <div
-      className="flip-container"
+      className={styles.flipContainer}
       data-testid={`${category}_${score}`}
+      onKeyDown={() => null}
       onClick={() => {
         setActive(true);
         setSelectedQuestion({ score, question, id });
@@ -23,15 +23,15 @@ function Flipper({
         localStorage.setItem('category', category);
       }}
     >
-      <div className="flipper">
-        <div className="front">
+      <div className={styles.flipper}>
+        <div className={styles.front}>
           <p>
             {score}
             $
           </p>
         </div>
-        <div className="back">
-          <p className="backText">HINT?</p>
+        <div className={styles.back}>
+          <p className={styles.backText}>HINT?</p>
         </div>
       </div>
     </div>

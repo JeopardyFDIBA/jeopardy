@@ -9,7 +9,7 @@ interface INumberInput {
 }
 function NumberInput({ number, handleChange, isReady }: INumberInput) {
   return (
-    <div className={styles.container}>
+    <div className={styles.numberInputContainer}>
       <Input
         value={number}
         handleChange={handleChange}
