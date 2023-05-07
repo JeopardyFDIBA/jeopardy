@@ -7,4 +7,5 @@ export default interface IInput extends DOMAttributes<HTMLInputElement> {
   disabled?: boolean;
   setChange?: (value: SetStateAction<string>) => void;
   inputRef?: React.RefObject<HTMLInputElement>;
+  shouldBeNumber?: boolean;
 }
