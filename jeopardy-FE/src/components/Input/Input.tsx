@@ -9,11 +9,20 @@ function Input({
   disabled = false,
   setChange,
   inputRef,
+  shouldBeNumber,
 }: IInput) {
   const [value, setValue] = useState('');
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setValue(e.currentTarget.value);
-    setChange?.(`${e.currentTarget.value}`);
+    const newValue = e.currentTarget.value;
+    if (shouldBeNumber) {
+      if (/^(|[1-9]+)$/.test(newValue)) {
+        setValue(newValue);
+        setChange?.(`${newValue}`);
+      }
+    } else {
+      setValue(e.currentTarget.value);
+      setChange?.(`${e.currentTarget.value}`);
+    }
   };
   return (
     <div className={styles.inputContainer}>
