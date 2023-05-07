@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/jsx-props-no-spreading */
 import {
@@ -5,14 +6,14 @@ import {
 } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import Avatar from 'react-avatar';
-import colors from '../../helpers/avatarColors';
+import avatarColors from '../../helpers/avatarColors';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './Main.module.scss';
-import Question from '../Question/Question';
 import QuestionsMatrix from '../QuestionsMatrix/QuestionsMatrix';
 import { maxTriesOnOpeningQuestion } from '../../helpers/helpConstants';
 import { IPLayer, IQuestion } from '../../sharedInterfaces';
 import apiInstance from '../../services/axiosConfig';
+import Question from '../Question/Question';
 
 export default function Main({
   reload,
@@ -98,8 +99,8 @@ export default function Main({
       const { name } = players[playerIndex];
       if (!toast.isActive(name)) {
         if ((+event.key >= 1 || +event.key <= 9) && !isInputBlocked) {
-          notify(name, colors[playerIndex]);
-          setBuzzer(colors[playerIndex]);
+          notify(name, avatarColors[playerIndex]);
+          setBuzzer(avatarColors[playerIndex]);
           setActivePlayer(players[playerIndex]);
         }
         setIsInputBlocked(false);
@@ -117,28 +118,24 @@ export default function Main({
   return (
     <div className={styles.wrapper}>
       <ToastContainer limit={1} />
-      <div
-        className={styles.questionsField}
-        style={{ backgroundColor: buzzer || '#0c0734' }}
-        ref={ref}
-        tabIndex={-1}
-        onKeyDown={handleKeyDown as unknown as React.KeyboardEventHandler<HTMLDivElement>}
-      >
-        {isActiveQuestion ? (
+      <div className={styles.questionsField} style={{ backgroundColor: buzzer || '#0c0734' }} ref={ref} tabIndex={-1} onKeyDown={handleKeyDown as unknown as React.KeyboardEventHandler<HTMLDivElement>}>
+        {hasGameStarted ? (!isActiveQuestion ? (
+          <QuestionsMatrix
+            categories={categories}
+            setActive={setIsActiveQuestion}
+            setIsInputBlocked={setIsInputBlocked}
+            setSelectedQuestion={setSelectedQuestion}
+          />
+        ) : (
           <Question
             {...sharedQuestionProps}
             questionObject={selectedQuestion}
           />
-        ) : (
-          <Question {...sharedQuestionProps} questionObject={openingQuestion} />
-        )}
-        {!isActiveQuestion && (
-        <QuestionsMatrix
-          categories={categories}
-          setActive={setIsActiveQuestion}
-          setIsInputBlocked={setIsInputBlocked}
-          setSelectedQuestion={setSelectedQuestion}
-        />
+        )) : (
+          <Question
+            {...sharedQuestionProps}
+            questionObject={openingQuestion}
+          />
         )}
       </div>
     </div>

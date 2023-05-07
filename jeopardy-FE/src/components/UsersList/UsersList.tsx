@@ -2,17 +2,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Avatar from 'react-avatar';
 import { useEffect, useState } from 'react';
 import styles from './UsersList.module.scss';
-import colors from '../../helpers/colors';
 import { maxInitials } from '../../helpers/helpConstants';
 import { IPLayer } from '../../sharedInterfaces';
 import apiInstance from '../../services/axiosConfig';
+import getAvatarColors from '../../helpers/getAvatarColors';
 
 function UsersList({ reload }: { reload: boolean }) {
   const [players, setPlayers] = useState<IPLayer[]>([]);
-  const avatarColors: string[] = [];
-  Object.values(players).forEach((val: IPLayer, i) => {
-    avatarColors.push(colors[i]);
-  });
+  const avatarColors = getAvatarColors(players);
   useEffect(() => {
     apiInstance
       .get('/players')
