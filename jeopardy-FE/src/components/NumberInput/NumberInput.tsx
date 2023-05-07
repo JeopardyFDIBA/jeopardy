@@ -1,12 +1,8 @@
-import { SetStateAction } from 'react';
 import { OptionsButtonItem } from '../OptionsItem/OptionsItem';
 import styles from './NumberInput.module.scss';
 import Input from '../Input/Input';
+import INumberInput from './INumberInput';
 
-interface INumberInput {
-  handleStepChange: () => void;
-  setNumber: (value: SetStateAction<string>) => void
-}
 function NumberInput({ handleStepChange, setNumber }: INumberInput) {
   return (
     <div className={styles.numberInputContainer}>

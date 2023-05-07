@@ -1,12 +1,13 @@
 import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
+import { ButtonHTMLAttributes } from 'react';
 import styles from './OptionsItem.module.scss';
 
 interface IOptionsLinkItem {
   title: string;
   destination: string;
 }
-interface IOptionsButtonItem {
+interface IOptionsButtonItem extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   onClick: () => void;
 }
