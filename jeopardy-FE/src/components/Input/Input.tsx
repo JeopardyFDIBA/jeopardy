@@ -15,7 +15,7 @@ function Input({
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
     if (shouldBeNumber) {
-      if (/^(|[1-9]+)$/.test(newValue)) { // check that newValue is a number between 1 and 9
+      if (/^(|[1-9]+)$/.test(newValue)) {
         setValue(newValue);
         setChange?.(`${newValue}`);
       }
